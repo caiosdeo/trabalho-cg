@@ -1,6 +1,6 @@
 function createWheelAxis(){
     let wheelAxisGeometry = new THREE.CylinderGeometry(0.5, 0.5, 10.5, 25);
-    let wheelAxisMaterial = new THREE.MeshPhongMaterial( {color:'rgb(150,150,150)'} );
+    let wheelAxisMaterial = new THREE.MeshPhongMaterial( {color:'rgb(50,50,50)'} );
     let wheelAxis = new THREE.Mesh(wheelAxisGeometry, wheelAxisMaterial);
 
     return wheelAxis;
@@ -77,10 +77,10 @@ class kartModel {
         this.rear.position.set(-8, 0.0, 1.0);
 
         //create a wing
-        let rearWingGeometry = new THREE.BoxGeometry(2, 8, 3);
+        let rearWingGeometry = new THREE.BoxGeometry(2, 8, 1.5);
         let rearWingMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)' });
         this.rearWing = new THREE.Mesh(rearWingGeometry, rearWingMaterial);
-        this.rearWing.position.set(-3, 0.0, 0.0);
+        this.rearWing.position.set(-2.0, 0.0, 1.5);
 
         //create a wing
         let spoilerSupportGeometry = new THREE.BoxGeometry(2, 0.3, 1.5);
@@ -88,13 +88,13 @@ class kartModel {
         this.spoilerSupportRight = new THREE.Mesh(spoilerSupportGeometry, spoilerSupportMaterial);
         this.spoilerSupportLeft = new THREE.Mesh(spoilerSupportGeometry, spoilerSupportMaterial);
         // position the cube
-        this.spoilerSupportRight.position.set(0, -1.5, 2);
-        this.spoilerSupportLeft.position.set(0, 1.5, 2);
+        this.spoilerSupportRight.position.set(0, -1.5, 1.5);
+        this.spoilerSupportLeft.position.set(0, 1.5, 1.5);
 
-        let spoilerGeometry = new THREE.BoxGeometry(2, 10, 1);
+        let spoilerGeometry = new THREE.BoxGeometry(3, 10, 0.5);
         let spoilerMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
         this.spoiler = new THREE.Mesh(spoilerGeometry, spoilerMaterial);
-        this.spoiler.position.set(0, 0, 3);
+        this.spoiler.position.set(0, 0, 2.5);
 
         //create a wheelAxis
         this.rearAxis = createWheelAxis();
@@ -124,9 +124,34 @@ class kartModel {
 
     getFrontWheelsAngle() { return this.frontWheelsAngle; }
 
-    incrementFrontWheelsAngle( angle) { this.frontWheelsAngle += angle}
+    incrementFrontWheelsAngle(angle) { 
 
-    decrementFrontWheelsAngle( angle) { this.frontWheelsAngle -= angle}
+        if(this.frontWheelsAngle < 0.5){
+            this.frontWheelsAngle = this.frontWheelsAngle + angle;
+            this.frontWheelLeft.rotateZ(this.frontWheelsAngle);
+            this.frontWheelRight.rotateZ(this.frontWheelsAngle);
+        }
+    }
+
+    decrementFrontWheelsAngle(angle) { 
+        if(this.frontWheelsAngle > -0.5){
+            this.frontWheelsAngle = this.frontWheelsAngle - angle;
+            this.frontWheelLeft.rotateZ(this.frontWheelsAngle);
+            this.frontWheelRight.rotateZ(this.frontWheelsAngle);
+        }
+    }
+
+    turnRight(){
+        this.floor.rotateZ(this.frontWheelsAngle)
+    }
+
+    turnLeft(){
+        this.floor.rotateZ(this.frontWheelsAngle)
+    }
+
+    moveFoward(){ this.floor.position.x += 3; }
+
+    moveBackward(){ this.floor.position.x -= 3;}
     
     getKart() { 
         
