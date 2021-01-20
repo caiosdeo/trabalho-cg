@@ -85,7 +85,6 @@ function main(){
   window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
 
   scene.add(kartFloor);
-
   render();
 
   function keyboardUpdate() {
@@ -112,23 +111,24 @@ function main(){
 
     if(!cameraMode){
       // Control the kart
-      if (keyboard.pressed("W")){
+      if (keyboard.pressed("up")){
         kart.moveFoward();
       }
-      if (keyboard.pressed("S")){
-        kart.moveBackward();
+      else{
+        kart.inercia();
+      }
+      if (keyboard.pressed("down")){
+        kart.break();
       }
 
-      if (keyboard.pressed("D")){
+      if (keyboard.pressed("right")){
         kart.decrementFrontWheelsAngle(2);
-        // kart.turnRight();
       }else{
         kart.correctFrontWheelsLeft();
       }
 
-      if (keyboard.pressed("A")){
+      if (keyboard.pressed("left")){
         kart.incrementFrontWheelsAngle(2);
-        // kart.turnLeft();
       }else{
         kart.correctFrontWheelsRight();
       }
@@ -149,7 +149,7 @@ function main(){
     }
     if (!cameraMode){
       scene.add(plane);
-      scene.add(line);
+      scene.add(line); 
     }
     lightFollowingCamera(light, camera);
     requestAnimationFrame(render);
