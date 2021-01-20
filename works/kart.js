@@ -1,6 +1,6 @@
 function behindKartCamera(camera, kart) {
   
-  var position = (kart !== undefined) ? new THREE.Vector3(kart.position.x - 40, 0, 15) : new THREE.Vector3(-50, 0, 20);
+  var position = (kart !== undefined) ? new THREE.Vector3(kart.position.x - 30, 0, 15) : new THREE.Vector3(-50, 0, 20);
   var upVec = new THREE.Vector3(0, 0, 1);
   let lookAt = new THREE.Vector3(kart.position.x, kart.position.y, kart.position.z);
 
@@ -118,13 +118,19 @@ function main(){
       if (keyboard.pressed("S")){
         kart.moveBackward();
       }
-      if (keyboard.down("D")){
-        kart.decrementFrontWheelsAngle(0.1);
-        kart.turnRight();
+
+      if (keyboard.pressed("D")){
+        kart.decrementFrontWheelsAngle(2);
+        // kart.turnRight();
+      }else{
+        kart.correctFrontWheelsLeft();
       }
-      if (keyboard.down("A")){
-        kart.incrementFrontWheelsAngle(0.1);
-        kart.turnLeft();
+
+      if (keyboard.pressed("A")){
+        kart.incrementFrontWheelsAngle(2);
+        // kart.turnLeft();
+      }else{
+        kart.correctFrontWheelsRight();
       }
 
       behindKartCamera(camera, kartFloor);

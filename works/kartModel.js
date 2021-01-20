@@ -10,7 +10,7 @@ function createWheel(){
 
     //create a wheel
     let wheelGeometry = new THREE.CylinderGeometry(2.5, 2.5, 2.0, 25);
-    let wheelMaterial = new THREE.MeshPhongMaterial( {color:'rgb(0,0,0)'} );
+    let wheelMaterial = new THREE.MeshPhongMaterial( {color:'rgb(10,10,10)'} );
     let wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
 
     return wheel;
@@ -126,27 +126,90 @@ class kartModel {
 
     incrementFrontWheelsAngle(angle) { 
 
-        if(this.frontWheelsAngle < 0.5){
-            this.frontWheelsAngle = this.frontWheelsAngle + angle;
-            this.frontWheelLeft.rotateZ(this.frontWheelsAngle);
-            this.frontWheelRight.rotateZ(this.frontWheelsAngle);
+        if(this.frontWheelsAngle + angle < 45){
+
+            this.frontWheelsAngle += angle;
+
+            this.frontWheelLeft.matrixAutoUpdate = false;
+            this.frontWheelRight.matrixAutoUpdate = false;
+
+            var mat4 = new THREE.Matrix4();
+
+            this.frontWheelLeft.matrix.identity();
+            this.frontWheelRight.matrix.identity();
+
+            this.frontWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
+            this.frontWheelLeft.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle))); 
+            this.frontWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
+            this.frontWheelRight.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
+
         }
     }
 
     decrementFrontWheelsAngle(angle) { 
-        if(this.frontWheelsAngle > -0.5){
-            this.frontWheelsAngle = this.frontWheelsAngle - angle;
-            this.frontWheelLeft.rotateZ(this.frontWheelsAngle);
-            this.frontWheelRight.rotateZ(this.frontWheelsAngle);
+
+        if(this.frontWheelsAngle - angle > -45){
+
+            this.frontWheelsAngle -= angle;
+
+            this.frontWheelLeft.matrixAutoUpdate = false;
+            this.frontWheelRight.matrixAutoUpdate = false;
+
+            var mat4 = new THREE.Matrix4();
+
+            this.frontWheelLeft.matrix.identity();
+            this.frontWheelRight.matrix.identity();
+
+            this.frontWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
+            this.frontWheelLeft.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle))); 
+            this.frontWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
+            this.frontWheelRight.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
+
         }
     }
 
-    turnRight(){
-        this.floor.rotateZ(this.frontWheelsAngle)
+    correctFrontWheelsLeft(){
+
+        if(this.frontWheelsAngle < 0){
+            this.frontWheelsAngle += 2;
+
+            this.frontWheelLeft.matrixAutoUpdate = false;
+            this.frontWheelRight.matrixAutoUpdate = false;
+
+            var mat4 = new THREE.Matrix4();
+
+            this.frontWheelLeft.matrix.identity();
+            this.frontWheelRight.matrix.identity();
+
+            this.frontWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
+            this.frontWheelLeft.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle))); 
+            this.frontWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
+            this.frontWheelRight.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
+        }
     }
 
-    turnLeft(){
-        this.floor.rotateZ(this.frontWheelsAngle)
+    correctFrontWheelsRight(){
+
+        if(this.frontWheelsAngle > 0){
+            this.frontWheelsAngle -= 2;
+
+            this.frontWheelLeft.matrixAutoUpdate = false;
+            this.frontWheelRight.matrixAutoUpdate = false;
+            // this.floor.matrixAutoUpdate = false;
+
+            var mat4 = new THREE.Matrix4();
+
+            this.frontWheelLeft.matrix.identity();
+            this.frontWheelRight.matrix.identity();
+            // this.floor.matrix.identity();
+
+            this.frontWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
+            this.frontWheelLeft.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle))); 
+            this.frontWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
+            this.frontWheelRight.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
+            // this.floor.matrix.multiply(mat4.makeTranslation(0.0, 0.0, 1.5)); 
+            // this.floor.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
+        }
     }
 
     moveFoward(){ this.floor.position.x += 3; }
