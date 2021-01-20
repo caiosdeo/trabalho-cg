@@ -24,6 +24,8 @@ class kartModel {
     constructor() {
 
         this.frontWheelsAngle = 0;
+        this.speedRate = .01;
+        this.speed = 0;
 
         // create base floor
         let floorGeometry = new THREE.BoxGeometry(10, 10, 0);
@@ -149,7 +151,30 @@ class kartModel {
         this.floor.rotateZ(this.frontWheelsAngle)
     }
 
-    moveFoward(){ this.floor.position.x += 3; }
+    moveFoward(){ 
+        if(this.speed < 100){
+            this.speed += this.speedRate;
+            this.floor.position.x += this.speed; 
+            // this.floor.matrixAutoUpdate = false;
+            // this.floor.matrix.identity();
+            // let mat4 = new THREE.Matrix4();
+            // this.floor.matrix.multiply(mat4.makeTranslation(this.speed,0,1.5))
+        }        
+    }
+
+    break(){
+        if(this.speed > 0){
+            this.speed -= this.speedRate * 3;
+            this.floor.position.x += this.speed;
+        }
+    }
+
+    inercia(){
+        if(this.speed > 0){
+            this.speed -= this.speedRate;
+            this.floor.position.x += this.speed;
+        }
+    }
 
     moveBackward(){ this.floor.position.x -= 3;}
     
