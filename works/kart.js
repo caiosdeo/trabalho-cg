@@ -1,10 +1,14 @@
-function behindKartCamera(camera, kart) {
+function behindKartCamera(camera, kart, kartY, kartX) {
   
-  var position = (kart !== undefined) ? new THREE.Vector3(kart.position.x - 30, kart.position.y, 15) : new THREE.Vector3(-50, 0, 20);
   var upVec = new THREE.Vector3(0, 0, 1);
-  let lookAt = new THREE.Vector3(kart.position.x, kart.position.y, kart.position.z);
+  let lookAt = new THREE.Vector3(kartY, kartX, 1.5);
+  
+  var relativeCameraOffset = new THREE.Vector3(-30, 0, 15);
+  var cameraOffset = relativeCameraOffset.applyMatrix4(kart.matrixWorld);
+  camera.position.x = cameraOffset.x;
+  camera.position.y = cameraOffset.y;
+  camera.position.z = cameraOffset.z;
 
-  camera.position.copy(position);
   camera.up = upVec;
   camera.lookAt(lookAt);
   
@@ -29,25 +33,30 @@ function main(){
   
   // * Coloca o Kart na cena
   let kart = new kartModel();
-  let kartFloor = kart.getKart();
-  let cameraMode;
+  let kartFloor = kart.assembleKart(); // * monta o kart
+  let kartAngle = kart.getFloorAngle(); // * angulo do chão do kart
+  let kartSpeedX = kart.getSpeedX(); 
+  let kartSpeedY = kart.getSpeedY();
+  let kartSpeedRate = kart.getSpeedRate();
+  let dx = 0; // * variavel para controlar distancia no X
+  let dy = 0; // * variavel para controlar distancia no Y
+  let cameraMode; // * bool pra controlar a camera
+  let inspect = false;
+  let behindKart = true; 
 
   let light  = initDefaultLighting(scene, kartFloor.position);
   let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); // Init camera in this position
-
-  behindKartCamera(camera, kartFloor);
-  // inspectCamera(camera, kartFloor);
+  
+  behindKartCamera(camera, kartFloor, dx, dy);
 
   // To use the keyboard
   var keyboard = new KeyboardState();
-  let inspect = false;
-  let behindKart = true; 
 
   // Enable mouse rotation, pan, zoom etc.
   var trackballControls = new THREE.TrackballControls( camera, renderer.domElement );
 
   // Show axes (parameter is size of each axis)
-  var axesHelper = new THREE.AxesHelper( 100 );
+  var axesHelper = new THREE.AxesHelper( 7000 );
   scene.add( axesHelper );
 
   //---------------------------------------------------------------------------------------
@@ -62,12 +71,10 @@ function main(){
       polygonOffsetUnits: 1
   });
   var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-  // scene.add(plane);
 
   var wireframe = new THREE.WireframeGeometry( planeGeometry );
   var line = new THREE.LineSegments( wireframe );
   line.material.color.setStyle( "rgb(180, 180, 180)" );  
-  // scene.add(line);
 
   function showInformation(){
     // Use this to show information onscreen
@@ -99,53 +106,75 @@ function main(){
       cameraMode = (inspect && !behindKart) ? true : false;
 
       if(cameraMode){
-
         inspectCamera(camera, kartFloor);
-  
       } else {
-  
-        behindKartCamera(camera, kartFloor)
+        behindKartCamera(camera, kartFloor, dx, dy);
       }
 
     }
 
     if(!cameraMode){
       // Control the kart
-      if (keyboard.pressed("up")){
-        kart.accelerate();
+      kartAngle = kart.getFloorAngle();
+      let teta = degreesToRadians(kartAngle);
+      let sin = Math.sin(teta)
+      let cos = Math.cos(teta)
+
+      if (keyboard.pressed("up")){ // * Aceleração do Kart
+        if(kartSpeedX < 100){
+          kartSpeedX += kartSpeedRate*Math.abs(sin);
+          dx += kartSpeedX*sin;
+
+        } 
+        if(kartSpeedY < 100){
+          kartSpeedY += kartSpeedRate*Math.abs(cos);
+          dy += kartSpeedY*cos;
+        }  
+      }else{ // * Inercia do Kart
+        if(kartSpeedX > 0){
+          kartSpeedX -= kartSpeedRate*Math.abs(sin);
+          dx += kartSpeedX*sin;
+        }
+        if(kartSpeedY > 0){
+          kartSpeedY-= kartSpeedRate*Math.abs(cos);
+          dy += kartSpeedY*cos;
+        }
+
       }
-      else{
-        kart.inercia();
-      }
-      if (keyboard.pressed("down")){
-        kart.break();
+      if (keyboard.pressed("down")){ // * Frenagem do Kart
+        if(kartSpeedX > 0){
+          kartSpeedX -= kartSpeedRate*Math.abs(sin)*3;
+          dx += kartSpeedX*sin;
+        }
+        if(kartSpeedY > 0){
+          kartSpeedY-= kartSpeedRate*Math.abs(cos)*3;
+          dy += kartSpeedY*cos;
+        }
+
       }
 
-      if (keyboard.pressed("right")){
-        kart.incrementFrontWheelsAngle(2);
-        kartFloor.matrixAutoUpdate = false;
-        kartFloor.matrix.identity();
-
-        let mat4 = new THREE.Matrix4();
-
-        kartFloor.matrix.multiply(mat4.makeRotationZ(degreesToRadians(kart.getFrontWheelsAngle())));
+      if (keyboard.pressed("right")){ // * Rodas do kart pra direita
+        kart.decrementFrontWheelsAngle(1);
       }else{
         kart.correctFrontWheelsLeft();
+
       }
-
-      if (keyboard.pressed("left")){
-        kart.decrementFrontWheelsAngle(2);
-        kartFloor.matrixAutoUpdate = true;
-        kartFloor.matrix.identity();
-
-        let mat4 = new THREE.Matrix4();
-
-        kartFloor.matrix.multiply(mat4.makeRotationZ(degreesToRadians(kart.getFrontWheelsAngle())));
+      if (keyboard.pressed("left")){ // * Rodas do kart pra esquerda
+        kart.incrementFrontWheelsAngle(1); 
       }else{
         kart.correctFrontWheelsRight();
+
       }
 
-      behindKartCamera(camera, kartFloor);
+      kart.setFloorAngle(kart.getFrontWheelsAngle()/10);
+
+      kartFloor.matrixAutoUpdate = false;
+      kartFloor.matrix.identity();
+      let mat4 = new THREE.Matrix4();
+      kartFloor.matrix.multiply(mat4.makeTranslation(dy, dx, 1.5))
+      kartFloor.matrix.multiply(mat4.makeRotationZ(degreesToRadians(kart.getFloorAngle())));
+
+      behindKartCamera(camera, kartFloor, dy, dx);
 
     }
   }
