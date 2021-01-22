@@ -1,6 +1,6 @@
 function behindKartCamera(camera, kart) {
   
-  var position = (kart !== undefined) ? new THREE.Vector3(kart.position.x - 30, 0, 15) : new THREE.Vector3(-50, 0, 20);
+  var position = (kart !== undefined) ? new THREE.Vector3(kart.position.x - 30, kart.position.y, 15) : new THREE.Vector3(-50, 0, 20);
   var upVec = new THREE.Vector3(0, 0, 1);
   let lookAt = new THREE.Vector3(kart.position.x, kart.position.y, kart.position.z);
 
@@ -112,7 +112,7 @@ function main(){
     if(!cameraMode){
       // Control the kart
       if (keyboard.pressed("up")){
-        kart.moveFoward();
+        kart.accelerate();
       }
       else{
         kart.inercia();
@@ -122,13 +122,25 @@ function main(){
       }
 
       if (keyboard.pressed("right")){
-        kart.decrementFrontWheelsAngle(2);
+        kart.incrementFrontWheelsAngle(2);
+        kartFloor.matrixAutoUpdate = false;
+        kartFloor.matrix.identity();
+
+        let mat4 = new THREE.Matrix4();
+
+        kartFloor.matrix.multiply(mat4.makeRotationZ(degreesToRadians(kart.getFrontWheelsAngle())));
       }else{
         kart.correctFrontWheelsLeft();
       }
 
       if (keyboard.pressed("left")){
-        kart.incrementFrontWheelsAngle(2);
+        kart.decrementFrontWheelsAngle(2);
+        kartFloor.matrixAutoUpdate = true;
+        kartFloor.matrix.identity();
+
+        let mat4 = new THREE.Matrix4();
+
+        kartFloor.matrix.multiply(mat4.makeRotationZ(degreesToRadians(kart.getFrontWheelsAngle())));
       }else{
         kart.correctFrontWheelsRight();
       }

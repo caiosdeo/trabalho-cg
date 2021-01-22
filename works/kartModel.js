@@ -24,14 +24,20 @@ class kartModel {
     constructor() {
 
         this.frontWheelsAngle = 0;
-        this.speedRate = .01;
-        this.speed = 0;
+        this.floorAngle = 90;
+        this.speedRate = 0.01;
+        this.speedX = 0;
+        this.speedY = 0;
 
         // create base floor
         let floorGeometry = new THREE.BoxGeometry(10, 10, 0);
         let floorMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(125,0,0)' });
         this.floor = new THREE.Mesh(floorGeometry, floorMaterial);
         this.floor.position.set(0.0, 0.0, 1.5);
+
+        this.floor.matrix.identity();
+
+        this.saveFloor = this.floor.matrix;
 
         // create chassi
         let chassiGeometry = new THREE.BoxGeometry(1, 8, 3);
@@ -126,6 +132,8 @@ class kartModel {
 
     getFrontWheelsAngle() { return this.frontWheelsAngle; }
 
+    getFloorAngle() {return this.floorAngle;}
+
     incrementFrontWheelsAngle(angle) { 
 
         if(this.frontWheelsAngle + angle < 45){
@@ -197,49 +205,74 @@ class kartModel {
 
             this.frontWheelLeft.matrixAutoUpdate = false;
             this.frontWheelRight.matrixAutoUpdate = false;
-            // this.floor.matrixAutoUpdate = false;
 
             var mat4 = new THREE.Matrix4();
 
             this.frontWheelLeft.matrix.identity();
             this.frontWheelRight.matrix.identity();
-            // this.floor.matrix.identity();
 
             this.frontWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
             this.frontWheelLeft.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle))); 
             this.frontWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
             this.frontWheelRight.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
-            // this.floor.matrix.multiply(mat4.makeTranslation(0.0, 0.0, 1.5)); 
-            // this.floor.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
         }
     }
 
-    moveFoward(){ 
-        if(this.speed < 100){
-            this.speed += this.speedRate;
-            this.floor.position.x += this.speed; 
-            // this.floor.matrixAutoUpdate = false;
-            // this.floor.matrix.identity();
-            // let mat4 = new THREE.Matrix4();
-            // this.floor.matrix.multiply(mat4.makeTranslation(this.speed,0,1.5))
-        }        
+    accelerate(){ 
+        let teta = degreesToRadians(this.floorAngle);
+        let sin = Math.sin(teta)
+        let cos = Math.cos(teta)
+        if(this.speedX < 100){
+            // this.speed += this.speedRate;
+            // this.floor.position.x += this.speed; 
+            this.speedX += this.speedRate*Math.abs(sin);
+            this.floor.position.x += this.speedX*sin;
+
+        } 
+        if(this.speedY < 100){
+            this.speedY += this.speedRate*Math.abs(cos);
+            this.floor.position.y += this.speedY*cos;
+        }  
+           
+        this.floorAngle += this.frontWheelsAngle / 10; 
+
+        // this.floor.matrixAutoUpdate = false;
+        
+        // this.floor.matrix.identity();
+        // let mat4 = new THREE.Matrix4();
+
+        // dx = this.speedX*sin;
+        // dy = this.speedY*cos;
+
+        // this.floor.matrix.multiply(mat4.makeTranslation(dy, dx, 1.5))
+        // this.floor.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.floorAngle)));
+        // mat4.multiply(this.saveFloor);
+
+        // this.saveFloor = this.floor.matrix;
     }
 
     break(){
-        if(this.speed > 0){
-            this.speed -= this.speedRate * 3;
-            this.floor.position.x += this.speed;
+        if(this.speedX > 0){
+            this.speedX -= this.speedRate * 3;
+            this.floor.position.x += this.speedX;
+        }
+        if(this.speedY > 0){
+            this.speedY -= this.speedRate * 3;
+            this.floor.position.y += this.speedY;
         }
     }
 
     inercia(){
-        if(this.speed > 0){
-            this.speed -= this.speedRate;
-            this.floor.position.x += this.speed;
+        if(this.speedX > 0){
+            this.speedX -= this.speedRate;
+            this.floor.position.x += this.speedX;
         }
+        if(this.speedY > 0){
+            this.speedY -= this.speedRate;
+            this.floor.position.y += this.speedY;
+        }
+        
     }
-
-    moveBackward(){ this.floor.position.x -= 3;}
     
     getKart() { 
         
