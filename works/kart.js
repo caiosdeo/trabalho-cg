@@ -119,7 +119,7 @@ function main(){
       let teta = degreesToRadians(kartAngle);
       let sin = Math.sin(teta);
       let cos = Math.cos(teta);
-      let speedFactor = Math.abs((kartSpeedX+1) / (kartSpeedY+1));
+      let turnFactor = 2;
       let distanceFactor = Math.abs(dx-dy) + 1;
       let breakFactor = 5;
 
@@ -159,15 +159,27 @@ function main(){
 
       if (keyboard.pressed("right")){ // * Rodas do kart pra direita
         kart.decrementFrontWheelsAngle(1);
-        // kartSpeedX *= Math.abs(Math.sin(45 - kart.getFrontWheelsAngle()));
-        // kartSpeedY *= Math.abs(Math.cos(45 - kart.getFrontWheelsAngle()));
+        if(kartSpeedX > 0){
+          kartSpeedX -= kartSpeedRate*turnFactor; // Diminui a velocidade de acordo com o speedRate * factor de viragem
+          dx += (kartSpeedX*sin)/distanceFactor;
+        }
+        if(kartSpeedY > 0){
+          kartSpeedY-= kartSpeedRate*turnFactor; // Diminui a velocidade de acordo com o speedRate * fator de viragem
+          dy += kartSpeedY*cos/distanceFactor;
+        }
       }else{
         kart.correctFrontWheelsLeft();
       }
       if (keyboard.pressed("left")){ // * Rodas do kart pra esquerda
-        kart.incrementFrontWheelsAngle(1); 
-        // kartSpeedX *= Math.abs(Math.sin(45 - kart.getFrontWheelsAngle()));
-        // kartSpeedY *= Math.abs(Math.cos(45 - kart.getFrontWheelsAngle()));
+        kart.incrementFrontWheelsAngle(1);
+        if(kartSpeedX > 0){
+          kartSpeedX -= kartSpeedRate*turnFactor; // Diminui a velocidade de acordo com o speedRate * factor de viragem
+          dx += (kartSpeedX*sin)/distanceFactor;
+        }
+        if(kartSpeedY > 0){
+          kartSpeedY-= kartSpeedRate*turnFactor; // Diminui a velocidade de acordo com o speedRate * fator de viragem
+          dy += kartSpeedY*cos/distanceFactor;
+        }
       }else{
         kart.correctFrontWheelsRight();
 
