@@ -172,7 +172,7 @@ function main(){
 
       }
 
-      if(kartSpeedX + kartSpeedY > 0){
+      if(kartSpeedX + kartSpeedY > 0){ // If para virar o Kart somente se houver velocidade em um dos eixos
         kart.setFloorAngle(kart.getFrontWheelsAngle()/10);
       }
 
