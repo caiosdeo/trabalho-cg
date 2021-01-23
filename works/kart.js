@@ -117,37 +117,40 @@ function main(){
       // Control the kart
       kartAngle = kart.getFloorAngle();
       let teta = degreesToRadians(kartAngle);
-      let sin = Math.sin(teta)
-      let cos = Math.cos(teta)
+      let sin = Math.sin(teta);
+      let cos = Math.cos(teta);
+      let speedFactor = Math.abs((kartSpeedX+1) / (kartSpeedY+1));
+      //let distanceFactor = Math.abs((dx+1)/(dy+1));
 
       if (keyboard.pressed("up")){ // * Aceleração do Kart
-        if(kartSpeedX < 100){
-          kartSpeedX += kartSpeedRate*Math.abs(sin);
-          dx += kartSpeedX*sin;
+        if(kartSpeedX < 100){ // Aceleração máxima em x
+          kartSpeedX += kartSpeedRate*Math.abs(sin); // Velocidade cresce de acordo com a taxa e o seno
+          dx += kartSpeedX*sin; // Espaço cresce de acordo com a taxa e o seno
 
         } 
-        if(kartSpeedY < 100){
-          kartSpeedY += kartSpeedRate*Math.abs(cos);
-          dy += kartSpeedY*cos;
+        if(kartSpeedY < 100){ // Aceleração máxima em Y
+          kartSpeedY += kartSpeedRate*Math.abs(cos); // O mesmo p/ X só que com o cosseno
+          dy += kartSpeedY*cos; // Idem
         }  
-      }else{ // * Inercia do Kart
+      }else{ // * Inercia do Kart - diminui a velocidade do kart até parar
         if(kartSpeedX > 0){
-          kartSpeedX -= kartSpeedRate*Math.abs(sin);
+          kartSpeedX -= kartSpeedRate*Math.abs(sin)*(speedFactor)*1.5; // Diminui a velocidade de acordo com o speedFactor
           dx += kartSpeedX*sin;
         }
         if(kartSpeedY > 0){
-          kartSpeedY-= kartSpeedRate*Math.abs(cos);
+          kartSpeedY-= kartSpeedRate*Math.abs(cos)*(1/(speedFactor))*1.5; // Diminui a velocidade de acordo com o 1/speedFactor
           dy += kartSpeedY*cos;
         }
 
       }
-      if (keyboard.pressed("down")){ // * Frenagem do Kart
+      if (keyboard.pressed("down")){ // * Frenagem do Kart - diminui "abruptamente" a velocidade do kart até parar
+
         if(kartSpeedX > 0){
-          kartSpeedX -= kartSpeedRate*Math.abs(sin)*3;
+          kartSpeedX -= kartSpeedRate*Math.abs(sin)*speedFactor*3; // Diminui a velocidade de acordo com o speedFactor
           dx += kartSpeedX*sin;
         }
         if(kartSpeedY > 0){
-          kartSpeedY-= kartSpeedRate*Math.abs(cos)*3;
+          kartSpeedY-= kartSpeedRate*Math.abs(cos)*(1/speedFactor)*3; // Diminui a velocidade de acordo com o 1/speedFactor
           dy += kartSpeedY*cos;
         }
 
@@ -155,18 +158,23 @@ function main(){
 
       if (keyboard.pressed("right")){ // * Rodas do kart pra direita
         kart.decrementFrontWheelsAngle(1);
+        // kartSpeedX *= Math.abs(sin);
+        // kartSpeedY *= Math.abs(cos);
       }else{
         kart.correctFrontWheelsLeft();
-
       }
       if (keyboard.pressed("left")){ // * Rodas do kart pra esquerda
         kart.incrementFrontWheelsAngle(1); 
+        // kartSpeedX *= Math.abs(sin);
+        // kartSpeedY *= Math.abs(cos);
       }else{
         kart.correctFrontWheelsRight();
 
       }
 
-      kart.setFloorAngle(kart.getFrontWheelsAngle()/10);
+      if(kartSpeedX + kartSpeedY > 0){
+        kart.setFloorAngle(kart.getFrontWheelsAngle()/10);
+      }
 
       kartFloor.matrixAutoUpdate = false;
       kartFloor.matrix.identity();
