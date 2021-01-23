@@ -121,24 +121,25 @@ function main(){
       let cos = Math.cos(teta);
       let speedFactor = Math.abs((kartSpeedX+1) / (kartSpeedY+1));
       let distanceFactor = Math.abs(dx-dy) + 1;
+      let breakFactor = 5;
 
       if (keyboard.pressed("up")){ // * Aceleração do Kart
         if(kartSpeedX < 100){ // Aceleração máxima em x
-          kartSpeedX += kartSpeedRate*Math.abs(sin); // Velocidade cresce de acordo com a taxa e o seno
+          kartSpeedX += kartSpeedRate; // Velocidade aumenta com a taxa kartSpeedRate
           dx += kartSpeedX*sin; // Espaço cresce de acordo com a taxa e o seno
 
         } 
         if(kartSpeedY < 100){ // Aceleração máxima em Y
-          kartSpeedY += kartSpeedRate*Math.abs(cos); // O mesmo p/ X só que com o cosseno
-          dy += kartSpeedY*cos; // Idem
+          kartSpeedY += kartSpeedRate; // Acelera com taxa kartSpeedEate
+          dy += kartSpeedY*cos; // Espaço cresce de acordo com a taxa e o cosseno
         }  
       }else{ // * Inercia do Kart - diminui a velocidade do kart até parar
         if(kartSpeedX > 0){
-          kartSpeedX -= kartSpeedRate*Math.abs(sin)*(speedFactor)*1.5; // Diminui a velocidade de acordo com o speedFactor
+          kartSpeedX -= kartSpeedRate; // Diminui a velocidade de acordo com o speedRate
           dx += kartSpeedX*sin;
         }
         if(kartSpeedY > 0){
-          kartSpeedY-= kartSpeedRate*Math.abs(cos)*(1/(speedFactor+0.0000001))*1.5; // Diminui a velocidade de acordo com o 1/speedFactor
+          kartSpeedY-= kartSpeedRate; // Diminui a velocidade de acordo com o speedRate
           dy += kartSpeedY*cos;
         }
 
@@ -146,11 +147,11 @@ function main(){
       if (keyboard.pressed("down")){ // * Frenagem do Kart - diminui "abruptamente" a velocidade do kart até parar
 
         if(kartSpeedX > 0){
-          kartSpeedX -= kartSpeedRate*Math.abs(sin)*speedFactor*3; // Diminui a velocidade de acordo com o speedFactor
+          kartSpeedX -= kartSpeedRate*breakFactor; // Diminui a velocidade de acordo com o speedRate * factor de frenagem
           dx += (kartSpeedX*sin)/distanceFactor;
         }
         if(kartSpeedY > 0){
-          kartSpeedY-= kartSpeedRate*Math.abs(cos)*(1/(speedFactor+.0000001))*3; // Diminui a velocidade de acordo com o 1/speedFactor
+          kartSpeedY-= kartSpeedRate*breakFactor; // Diminui a velocidade de acordo com o speedRate * fator de frenagem
           dy += kartSpeedY*cos/distanceFactor;
         }
 
@@ -158,15 +159,15 @@ function main(){
 
       if (keyboard.pressed("right")){ // * Rodas do kart pra direita
         kart.decrementFrontWheelsAngle(1);
-        // kartSpeedX *= Math.abs(sin);
-        // kartSpeedY *= Math.abs(cos);
+        // kartSpeedX *= Math.abs(Math.sin(45 - kart.getFrontWheelsAngle()));
+        // kartSpeedY *= Math.abs(Math.cos(45 - kart.getFrontWheelsAngle()));
       }else{
         kart.correctFrontWheelsLeft();
       }
       if (keyboard.pressed("left")){ // * Rodas do kart pra esquerda
         kart.incrementFrontWheelsAngle(1); 
-        // kartSpeedX *= Math.abs(sin);
-        // kartSpeedY *= Math.abs(cos);
+        // kartSpeedX *= Math.abs(Math.sin(45 - kart.getFrontWheelsAngle()));
+        // kartSpeedY *= Math.abs(Math.cos(45 - kart.getFrontWheelsAngle()));
       }else{
         kart.correctFrontWheelsRight();
 
