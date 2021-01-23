@@ -120,7 +120,7 @@ function main(){
       let sin = Math.sin(teta);
       let cos = Math.cos(teta);
       let speedFactor = Math.abs((kartSpeedX+1) / (kartSpeedY+1));
-      //let distanceFactor = Math.abs((dx+1)/(dy+1));
+      let distanceFactor = Math.abs(dx-dy) + 1;
 
       if (keyboard.pressed("up")){ // * Aceleração do Kart
         if(kartSpeedX < 100){ // Aceleração máxima em x
@@ -138,7 +138,7 @@ function main(){
           dx += kartSpeedX*sin;
         }
         if(kartSpeedY > 0){
-          kartSpeedY-= kartSpeedRate*Math.abs(cos)*(1/(speedFactor))*1.5; // Diminui a velocidade de acordo com o 1/speedFactor
+          kartSpeedY-= kartSpeedRate*Math.abs(cos)*(1/(speedFactor+0.0000001))*1.5; // Diminui a velocidade de acordo com o 1/speedFactor
           dy += kartSpeedY*cos;
         }
 
@@ -147,11 +147,11 @@ function main(){
 
         if(kartSpeedX > 0){
           kartSpeedX -= kartSpeedRate*Math.abs(sin)*speedFactor*3; // Diminui a velocidade de acordo com o speedFactor
-          dx += kartSpeedX*sin;
+          dx += (kartSpeedX*sin)/distanceFactor;
         }
         if(kartSpeedY > 0){
-          kartSpeedY-= kartSpeedRate*Math.abs(cos)*(1/speedFactor)*3; // Diminui a velocidade de acordo com o 1/speedFactor
-          dy += kartSpeedY*cos;
+          kartSpeedY-= kartSpeedRate*Math.abs(cos)*(1/(speedFactor+.0000001))*3; // Diminui a velocidade de acordo com o 1/speedFactor
+          dy += kartSpeedY*cos/distanceFactor;
         }
 
       }
