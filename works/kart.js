@@ -119,7 +119,7 @@ function main(){
       let teta = degreesToRadians(kartAngle);
       let sin = Math.sin(teta);
       let cos = Math.cos(teta);
-      let turnFactor = 1;
+      let turnFactor = 0.001;
       let distanceFactor = Math.abs(dx-dy) + 1;
       let breakFactor = 5;
 
