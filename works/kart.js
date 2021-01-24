@@ -59,10 +59,6 @@ function main(){
   // Enable mouse rotation, pan, zoom etc.
   var trackballControls = new THREE.TrackballControls( camera, renderer.domElement );
 
-  // Show axes (parameter is size of each axis)
-  var axesHelper = new THREE.AxesHelper( 7000 );
-  // scene.add( axesHelper );
-
   //---------------------------------------------------------------------------------------
   // create the ground plane with wireframe
   var planeGeometry = new THREE.PlaneGeometry(7000, 7000, 40, 40);
