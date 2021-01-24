@@ -14,13 +14,17 @@ function behindKartCamera(camera, kart, kartY, kartX) {
   
 }
 
-function inspectCamera(camera, kart) {
+function inspectCamera(camera, kart, kartY, kartX) {
   
-  var position = new THREE.Vector3(40 + kart.position.x, 15, 20);
   var upVec = new THREE.Vector3(0, 0, 1);
-  let lookAt = new THREE.Vector3(kart.position.x, kart.position.y, kart.position.z);
+  let lookAt = new THREE.Vector3(kartY, kartX, 1.5);
 
-  camera.position.copy(position);
+  var relativeCameraOffset = new THREE.Vector3(30, 10, 15);
+  var cameraOffset = relativeCameraOffset.applyMatrix4(kart.matrixWorld);
+  camera.position.x = cameraOffset.x;
+  camera.position.y = cameraOffset.y;
+  camera.position.z = cameraOffset.z;
+
   camera.up = upVec;
   camera.lookAt(lookAt);
 }
@@ -57,7 +61,7 @@ function main(){
 
   // Show axes (parameter is size of each axis)
   var axesHelper = new THREE.AxesHelper( 7000 );
-  scene.add( axesHelper );
+  // scene.add( axesHelper );
 
   //---------------------------------------------------------------------------------------
   // create the ground plane with wireframe
@@ -106,7 +110,7 @@ function main(){
       cameraMode = (inspect && !behindKart) ? true : false;
 
       if(cameraMode){
-        inspectCamera(camera, kartFloor);
+        inspectCamera(camera, kartFloor, dx, dy);
       } else {
         behindKartCamera(camera, kartFloor, dx, dy);
       }
@@ -119,7 +123,7 @@ function main(){
       let teta = degreesToRadians(kartAngle);
       let sin = Math.sin(teta);
       let cos = Math.cos(teta);
-      let turnFactor = 2;
+      let turnFactor = 1;
       let distanceFactor = Math.abs(dx-dy) + 1;
       let breakFactor = 5;
 
@@ -204,14 +208,17 @@ function main(){
 
     stats.update(); // Update FPS
     if(inspect){
-      trackballControls.target = kartFloor.position;
+      trackballControls.target.y = dx;
+      trackballControls.target.x = dy;
       trackballControls.update(); // Enable mouse movements
       scene.remove(plane);
       scene.remove(line);
+      scene.background = new THREE.Color( "rgb(20, 30, 110)" );;
     }
     if (!cameraMode){
       scene.add(plane);
       scene.add(line); 
+      scene.background = new THREE.Color( "rgb(0, 0, 0)" );;
     }
     lightFollowingCamera(light, camera);
     requestAnimationFrame(render);
