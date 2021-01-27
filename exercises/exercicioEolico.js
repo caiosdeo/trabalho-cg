@@ -36,6 +36,31 @@ function newBlade(){
 	return blade;
 }
 
+function newMotorBack(){
+
+	var motorMaterial = new THREE.MeshPhongMaterial({color:"rgb(200,150,150)"});
+    motorMaterial.side =  THREE.DoubleSide;
+	var points = generatePoints();
+	// Set the main properties of the surface
+	var segments = 100;
+	var phiStart = 0;
+	var phiLength = 2*Math.PI;
+	var motorGeometry = new THREE.LatheGeometry(points, segments, phiStart, phiLength);
+	var motor = new THREE.Mesh(motorGeometry, motorMaterial);
+	motor.castShadow = true;
+	
+	function generatePoints(){
+		var points = [];
+		var numberOfPoints = 8;
+		for (var i = 0; i < numberOfPoints; i++) {
+			points.push(new THREE.Vector2(Math.sin(i*8 / 15.3), i/1.2));
+		}
+		return points;
+	}
+
+	return motor;
+}
+
 function main(){
 
 	var stats = initStats();          // To show FPS information
@@ -71,14 +96,14 @@ function main(){
 	base.translateZ(0.125);
 
 	// More information about cylinderGeometry here --> https://threejs.org/docs/#api/en/geometries/CylinderGeometry
-	var poleGeometry = new THREE.CylinderGeometry(0.3, 0.5, 7.0, 25);
+	var poleGeometry = new THREE.CylinderGeometry(0.1, 0.5, 7.0, 25);
 	var poleMaterial = new THREE.MeshPhongMaterial( {color:'rgb(200,200,200)'} );
 	var pole = new THREE.Mesh( poleGeometry, poleMaterial );
 	scene.add(pole);
 	pole.rotateX(degreesToRadians(90)).translateY(3.75);
 
 	// More information about cylinderGeometry here --> https://threejs.org/docs/#api/en/geometries/CylinderGeometry
-	var motorGeometry = new THREE.CylinderGeometry(0.3, 0.3, 3.0, 25);
+	var motorGeometry = new THREE.CylinderGeometry(0.5, 0.3, 4.0, 5);
 	var motorMaterial = new THREE.MeshPhongMaterial( {color:'rgb(150,200,150)'} );
 	var motor = new THREE.Mesh( motorGeometry, motorMaterial );
 	pole.add(motor);
@@ -90,6 +115,8 @@ function main(){
 	motor.add(blade2);
 	let blade3 = newBlade();
 	motor.add(blade3);
+	let motor2 = newMotorBack();
+	motor.add(motor2);
 
 	// Listen window size changes
 	window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
