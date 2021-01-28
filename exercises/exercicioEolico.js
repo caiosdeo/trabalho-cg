@@ -52,9 +52,9 @@ function newMotor(){
 	
 	function generatePoints(){
 		var points = [];
-		var numberOfPoints = 5;
+		var numberOfPoints = 7;
 		for (var i = 0; i < numberOfPoints; i++) {
-			points.push(new THREE.Vector2(Math.cos(i*5 / 1.3), i));
+			points.push(new THREE.Vector2(Math.cosh(i/4), i));
 		}
 		return points;
 	}
@@ -103,17 +103,19 @@ function main(){
 	scene.add(pole);
 	pole.rotateX(degreesToRadians(90)).translateY(3.75);
 
-	let motor = newMotor();
+	// let motor = newMotor();
+	var motorGeometry = new THREE.CylinderGeometry(0.3, 0.5, 3.0, 6);
+	var motorMaterial = new THREE.MeshPhongMaterial( {color:'rgb(0,0,0)'} );
+	var motor = new THREE.Mesh( motorGeometry, motorMaterial );
+	scene.add(pole);
 	pole.add(motor);
-	motor.rotateX(degreesToRadians(90)).rotateZ(degreesToRadians(90)).translateZ(-3.5).translateY(-2.5);
+	motor.rotateX(degreesToRadians(90)).rotateZ(degreesToRadians(90)).translateZ(-3.5);
 
 	// More information about cylinderGeometry here --> https://threejs.org/docs/#api/en/geometries/CylinderGeometry
-	var rotorGeometry = new THREE.CylinderGeometry(0.4, 0.3, 0.8, 6);
+	var rotorGeometry = new THREE.CylinderGeometry(0.4, 0.3, 0.42, 6);
 	var rotorMaterial = new THREE.MeshPhongMaterial( {color:'rgb(112,128,144)'} );
 	var rotor = new THREE.Mesh( rotorGeometry, rotorMaterial );
 	motor.add(rotor);
-	// rotor.rotateX(degreesToRadians(90)).rotateZ(degreesToRadians(90)).translateY(-3.5);
-	// rotor.translateY(0.5);
 
 	let blade1 = newBlade();
 	blade1.rotateZ(degreesToRadians(90)).rotateY(degreesToRadians(180)).rotateX(degreesToRadians(0));
@@ -144,7 +146,7 @@ function main(){
 			rotor.matrix.identity();
 
 			rotor.matrix.multiply(mat4.makeRotationY(-angle));
-			rotor.matrix.multiply(mat4.makeTranslation(0.0, 0.5, 0.0));
+			rotor.matrix.multiply(mat4.makeTranslation(0.0, -1.7, 0.0));
 			
 		}
 	}
