@@ -13,7 +13,7 @@ function initCamera() {
 
 function newBlade(){
 
-	var bladeMaterial = new THREE.MeshPhongMaterial({color:"rgb(200,150,150)"});
+	var bladeMaterial = new THREE.MeshPhongMaterial({color:"rgb(0,0,139)"});
     bladeMaterial.side =  THREE.DoubleSide;
 	var points = generatePoints();
 	// Set the main properties of the surface
@@ -39,7 +39,7 @@ function newBlade(){
 
 function newMotor(){
 
-	var motorMaterial = new THREE.MeshPhongMaterial({color:"rgb(200,0,0)"});
+	var motorMaterial = new THREE.MeshPhongMaterial({color:"rgb(0,0,0)"});
     motorMaterial.side =  THREE.DoubleSide;
 	var points = generatePoints();
 	// Set the main properties of the surface
@@ -52,9 +52,9 @@ function newMotor(){
 	
 	function generatePoints(){
 		var points = [];
-		var numberOfPoints = 7;
+		var numberOfPoints = 5;
 		for (var i = 0; i < numberOfPoints; i++) {
-			points.push(new THREE.Vector2(Math.sin(i*8 / 15.3), i));
+			points.push(new THREE.Vector2(Math.cos(i*5 / 1.3), i));
 		}
 		return points;
 	}
@@ -98,7 +98,7 @@ function main(){
 
 	// More information about cylinderGeometry here --> https://threejs.org/docs/#api/en/geometries/CylinderGeometry
 	var poleGeometry = new THREE.CylinderGeometry(0.1, 0.5, 7.0, 25);
-	var poleMaterial = new THREE.MeshPhongMaterial( {color:'rgb(200,200,200)'} );
+	var poleMaterial = new THREE.MeshPhongMaterial( {color:'rgb(255,255,255)'} );
 	var pole = new THREE.Mesh( poleGeometry, poleMaterial );
 	scene.add(pole);
 	pole.rotateX(degreesToRadians(90)).translateY(3.75);
@@ -108,8 +108,8 @@ function main(){
 	motor.rotateX(degreesToRadians(90)).rotateZ(degreesToRadians(90)).translateZ(-3.5).translateY(-2.5);
 
 	// More information about cylinderGeometry here --> https://threejs.org/docs/#api/en/geometries/CylinderGeometry
-	var rotorGeometry = new THREE.CylinderGeometry(0.5, 0.3, 0.8, 6);
-	var rotorMaterial = new THREE.MeshPhongMaterial( {color:'rgb(150,200,150)'} );
+	var rotorGeometry = new THREE.CylinderGeometry(0.4, 0.3, 0.8, 6);
+	var rotorMaterial = new THREE.MeshPhongMaterial( {color:'rgb(112,128,144)'} );
 	var rotor = new THREE.Mesh( rotorGeometry, rotorMaterial );
 	motor.add(rotor);
 	// rotor.rotateX(degreesToRadians(90)).rotateZ(degreesToRadians(90)).translateY(-3.5);
