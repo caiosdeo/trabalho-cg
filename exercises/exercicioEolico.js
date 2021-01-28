@@ -23,7 +23,8 @@ function newBlade(){
 	var bladeGeometry = new THREE.LatheGeometry(points, segments, phiStart, phiLength);
 	var blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
 	blade.castShadow = true;
-	
+	blade.scale.set(0.5,0.5,0.5);
+
 	function generatePoints(){
 		var points = [];
 		var numberOfPoints = 7;
@@ -36,9 +37,9 @@ function newBlade(){
 	return blade;
 }
 
-function newMotorBack(){
+function newMotor(){
 
-	var motorMaterial = new THREE.MeshPhongMaterial({color:"rgb(200,150,150)"});
+	var motorMaterial = new THREE.MeshPhongMaterial({color:"rgb(200,0,0)"});
     motorMaterial.side =  THREE.DoubleSide;
 	var points = generatePoints();
 	// Set the main properties of the surface
@@ -51,9 +52,9 @@ function newMotorBack(){
 	
 	function generatePoints(){
 		var points = [];
-		var numberOfPoints = 8;
+		var numberOfPoints = 7;
 		for (var i = 0; i < numberOfPoints; i++) {
-			points.push(new THREE.Vector2(Math.sin(i*8 / 15.3), i/1.2));
+			points.push(new THREE.Vector2(Math.sin(i*8 / 15.3), i));
 		}
 		return points;
 	}
@@ -102,21 +103,27 @@ function main(){
 	scene.add(pole);
 	pole.rotateX(degreesToRadians(90)).translateY(3.75);
 
-	// More information about cylinderGeometry here --> https://threejs.org/docs/#api/en/geometries/CylinderGeometry
-	var motorGeometry = new THREE.CylinderGeometry(0.5, 0.3, 4.0, 5);
-	var motorMaterial = new THREE.MeshPhongMaterial( {color:'rgb(150,200,150)'} );
-	var motor = new THREE.Mesh( motorGeometry, motorMaterial );
+	let motor = newMotor();
 	pole.add(motor);
-	motor.rotateX(degreesToRadians(90)).rotateZ(degreesToRadians(90)).translateZ(-3.5);
+	motor.rotateX(degreesToRadians(90)).rotateZ(degreesToRadians(90)).translateZ(-3.5).translateY(-2.5);
+
+	// More information about cylinderGeometry here --> https://threejs.org/docs/#api/en/geometries/CylinderGeometry
+	var rotorGeometry = new THREE.CylinderGeometry(0.5, 0.3, 0.8, 6);
+	var rotorMaterial = new THREE.MeshPhongMaterial( {color:'rgb(150,200,150)'} );
+	var rotor = new THREE.Mesh( rotorGeometry, rotorMaterial );
+	motor.add(rotor);
+	// rotor.rotateX(degreesToRadians(90)).rotateZ(degreesToRadians(90)).translateY(-3.5);
+	// rotor.translateY(0.5);
 
 	let blade1 = newBlade();
-	motor.add(blade1);
+	blade1.rotateZ(degreesToRadians(90)).rotateY(degreesToRadians(180)).rotateX(degreesToRadians(0));
+	rotor.add(blade1);
 	let blade2 = newBlade();
-	motor.add(blade2);
+	blade2.rotateZ(degreesToRadians(90)).rotateY(degreesToRadians(180)).rotateX(degreesToRadians(120));
+	rotor.add(blade2);
 	let blade3 = newBlade();
-	motor.add(blade3);
-	let motor2 = newMotorBack();
-	motor.add(motor2);
+	blade3.rotateZ(degreesToRadians(90)).rotateY(degreesToRadians(180)).rotateX(degreesToRadians(240));
+	rotor.add(blade3);
 
 	// Listen window size changes
 	window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
@@ -127,39 +134,17 @@ function main(){
 	function rotateCylinder(){
 		// More info:
 		// https://threejs.org/docs/#manual/en/introduction/Matrix-transformations
-		blade1.matrixAutoUpdate = false;
-		blade2.matrixAutoUpdate = false;
-		blade3.matrixAutoUpdate = false;
+		rotor.matrixAutoUpdate = false;
 
 		// Set angle's animation speed
 		if(animationOn){
 			angle+=speed;
 			
 			var mat4 = new THREE.Matrix4();
-			blade1.matrix.identity();
-			blade2.matrix.identity();
-			blade3.matrix.identity();
+			rotor.matrix.identity();
 
-			blade1.matrix.multiply(mat4.makeRotationY(-angle)); // R1 // T1
-			blade1.matrix.multiply(mat4.makeRotationZ(degreesToRadians(90))); // R2
-			blade1.matrix.multiply(mat4.makeRotationY(degreesToRadians(180))); // R2
-			blade1.matrix.multiply(mat4.makeRotationX(degreesToRadians(0))); // R2
-			blade1.matrix.multiply(mat4.makeTranslation(1.5, 0.0, 0.0));
-			blade1.matrix.multiply(mat4.makeScale(0.5,0.5,0.5));
-
-			blade2.matrix.multiply(mat4.makeRotationY(-angle)); // R1 // T1
-			blade2.matrix.multiply(mat4.makeRotationZ(degreesToRadians(90))); // R2
-			blade2.matrix.multiply(mat4.makeRotationY(degreesToRadians(180))); // R2
-			blade2.matrix.multiply(mat4.makeRotationX(degreesToRadians(120))); // R2
-			blade2.matrix.multiply(mat4.makeTranslation(1.5, 0.0, 0.0));
-			blade2.matrix.multiply(mat4.makeScale(0.5,0.5,0.5));
-
-			blade3.matrix.multiply(mat4.makeRotationY(-angle)); // R1 // T1
-			blade3.matrix.multiply(mat4.makeRotationZ(degreesToRadians(90))); // R2
-			blade3.matrix.multiply(mat4.makeRotationY(degreesToRadians(180))); // R2
-			blade3.matrix.multiply(mat4.makeRotationX(degreesToRadians(240))); // R2
-			blade3.matrix.multiply(mat4.makeTranslation(1.5, 0.0, 0.0));
-			blade3.matrix.multiply(mat4.makeScale(0.5,0.5,0.5));
+			rotor.matrix.multiply(mat4.makeRotationY(-angle));
+			rotor.matrix.multiply(mat4.makeTranslation(0.0, 0.5, 0.0));
 			
 		}
 	}
