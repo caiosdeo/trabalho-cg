@@ -19,6 +19,7 @@ var list = {
 				"Eolic Turbine": "html/eolicPreview"
 			},
 			"Lighting":  {
+				"Three Lights": "html/lightPreview"
 			},
 			"Textures":  {
 			},
