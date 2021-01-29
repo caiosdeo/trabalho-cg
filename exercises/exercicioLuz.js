@@ -161,37 +161,16 @@ function main(){
             this.redLightOn = true;
             this.blueLightOn = true;
 
-            this.onSwitchGreenLight = function(){
-
-                this.greenLightOn = !this.greenLightOn;
-
-                if(this.greenLightOn){
-                    scene.add(greenSpotLight);
-                }else{
-                    scene.remove(greenSpotLight);
-                }
+            this.viewGreenLight = function(){
+                greenSpotLight.visible = this.greenLightOn;
             };
 
-            this.onSwitchRedLight = function(){
-
-                this.redLightOn = !this.redLightOn;
-
-                if(this.redLightOn){
-                    scene.add(redSpotLight);
-                }else{
-                    scene.remove(redSpotLight);
-                }
+            this.viewRedLight = function(){
+                redSpotLight.visible = this.redLightOn;
             };
 
-            this.onSwitchBlueLight = function(){
-
-                this.blueLightOn = !this.blueLightOn;
-
-                if(this.blueLightOn){
-                    scene.add(blueSpotLight);
-                }else{
-                    scene.remove(blueSpotLight);
-                }
+            this.viewBlueLight = function(){
+                blueSpotLight.visible = this.blueLightOn;
             };
 
             this.onChangeAnimation = function(){
@@ -202,12 +181,16 @@ function main(){
 
         var gui = new dat.GUI();
         gui.add(controls, 'onChangeAnimation',true).name("Animation On/Off");
-        gui.add(controls, 'onSwitchBlueLight', false)
+        gui.add(controls, 'blueLightOn', false)
             .name("Blue Light")
-        gui.add(controls, 'onSwitchGreenLight', false)
+            .onChange(function(e) { controls.viewBlueLight() });
+        gui.add(controls, 'greenLightOn', false)
             .name("Green Light")
-        gui.add(controls, 'onSwitchRedLight', false)
+            .onChange(function(e) { controls.viewGreenLight() });
+        gui.add(controls, 'redLightOn', false)
             .name("Red Light")
+            .onChange(function(e) { controls.viewRedLight() });
+
     }
 
     function keyboardUpdate(){
