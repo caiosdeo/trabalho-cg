@@ -4,6 +4,9 @@ var list = {
 			"Part 1":  {
 				"Kart": "html/kart1Preview",
 			},
+			"Part 2":  {
+				"Light Posts": "html/lightpolePreview",
+			},
 		},
 		"Exercises": {
 			"Basics":  {
