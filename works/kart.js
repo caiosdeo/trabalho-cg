@@ -138,6 +138,20 @@ function main(){
       behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
 
     }
+
+    if(cameraMode){
+      if (keyboard.pressed("right")){ // * Rodas do kart pra direita
+        kart.decrementFrontWheelsAngle(1);
+      }else{
+        kart.correctFrontWheelsLeft();
+      }
+      if (keyboard.pressed("left")){ // * Rodas do kart pra esquerda
+        kart.incrementFrontWheelsAngle(1);
+      }else{
+        kart.correctFrontWheelsRight();
+      }
+    }
+
   }
 
   function render(){
