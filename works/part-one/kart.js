@@ -38,7 +38,6 @@ function main(){
   // * Coloca o Kart na cena
   let kart = new kartModel();
   let kartFloor = kart.assembleKart(); // * monta o kart
-  // let kartSpeed = kart.getSpeed(); 
   let kartSpeedRate = kart.getSpeedRate();
   let kartSpeed = 0;
   let cameraMode; // * bool pra controlar a camera
@@ -73,18 +72,6 @@ function main(){
   var line = new THREE.LineSegments( wireframe );
   line.material.color.setStyle( "rgb(180, 180, 180)" );  
 
-  function showInformation(){
-    // Use this to show information onscreen
-    controls = new InfoBox();
-      controls.add("Inspeção");
-      controls.addParagraph();
-      controls.add("Use mouse to interact:");
-      controls.add("* Left button to rotate");
-      controls.add("* Right button to translate (pan)");
-      controls.add("* Scroll to zoom in/out.");
-      controls.show();
-  }
-
   // Listen window size changes
   window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
 
@@ -103,7 +90,7 @@ function main(){
       cameraMode = (inspect && !behindKart) ? true : false;
 
       if(cameraMode){
-        inspectCamera(camera, kartFloor, dx, dy);
+        inspectCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
       } else {
         behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
       }
@@ -157,8 +144,8 @@ function main(){
 
     stats.update(); // Update FPS
     if(inspect){
-      trackballControls.target.y = dx;
-      trackballControls.target.x = dy;
+      trackballControls.target.y = kartFloor.position.y;
+      trackballControls.target.x = kartFloor.position.x;
       trackballControls.update(); // Enable mouse movements
       scene.remove(plane);
       scene.remove(line);

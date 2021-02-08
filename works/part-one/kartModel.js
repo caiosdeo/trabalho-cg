@@ -130,7 +130,7 @@ class kartModel {
 
     getFloorAngle() {return this.floorAngle;}
 
-    getSpeedX() {return this.speed};
+    getSpeed() {return this.speed};
 
     getSpeedRate() {return this.speedRate};
 
