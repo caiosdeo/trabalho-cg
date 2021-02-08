@@ -1,11 +1,14 @@
 var list = {
 	"en": {
 		"Work": {
+			"Full":  {
+				"All integrated": "html/mainPreview",
+			},
 			"Part 1":  {
 				"Kart": "html/kart1Preview",
 			},
 			"Part 2":  {
-				"Light Posts": "html/lightpolePreview",
+				"Light Poles": "html/lightpolePreview",
 			},
 		},
 		"Exercises": {

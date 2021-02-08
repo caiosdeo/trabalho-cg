@@ -40,13 +40,6 @@ function createLightPole(scene, position){
     // Create and set all lights
     var spotLight = new THREE.SpotLight("rgb(255,255,255)");
 
-    // const geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
-    // const material = new THREE.MeshPhongMaterial( {color: 0xff0000} );
-    // const sphere = new THREE.Mesh( geometry, material );
-    // scene.add( sphere );
-    // sphere.position.copy(lightPosition);
-    // sphere.translateY(-9);
-
     setSpotLight(scene, lightPosition, spotLight);
 
     // Set PointLight

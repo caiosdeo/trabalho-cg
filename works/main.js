@@ -3,7 +3,7 @@ function behindKartCamera(camera, kart, kartY, kartX) {
   var upVec = new THREE.Vector3(0, 0, 1);
   let lookAt = new THREE.Vector3(kartY, kartX, 1.5);
   
-  var relativeCameraOffset = new THREE.Vector3(-40, 0, 20);
+  var relativeCameraOffset = new THREE.Vector3(-40, 0, 12.5);
   var cameraOffset = relativeCameraOffset.applyMatrix4(kart.matrixWorld);
   camera.position.x = cameraOffset.x;
   camera.position.y = cameraOffset.y;
@@ -75,7 +75,34 @@ function main(){
   // Listen window size changes
   window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
 
+  // Add Kart to the scene
   scene.add(kartFloor);
+
+  // Add sun
+  createSun(scene);
+
+  // Add a pole
+  let polePos = new THREE.Vector3(15,-15,10);
+  createLightPole(scene, polePos);
+
+  let polePos1 = new THREE.Vector3(135,-15,10);
+  createLightPole(scene, polePos1);
+
+  let polePos2 = new THREE.Vector3(255,-15,10);
+  createLightPole(scene, polePos2);
+
+  let polePos3 = new THREE.Vector3(375,-15,10);
+  createLightPole(scene, polePos3);
+
+  let polePos4 = new THREE.Vector3(500,-15,10);
+  createLightPole(scene, polePos4);
+
+  let polePos5 = new THREE.Vector3(620,-15,10);
+  createLightPole(scene, polePos5);
+
+  let polePos6 = new THREE.Vector3(740,-15,10);
+  createLightPole(scene, polePos6);
+
   render();
 
   function keyboardUpdate() {
@@ -170,7 +197,7 @@ function main(){
       scene.add(line); 
       scene.background = new THREE.Color( "rgb(0, 0, 0)" );;
     }
-    lightFollowingCamera(light, camera);
+    // lightFollowingCamera(light, camera);
     requestAnimationFrame(render);
     keyboardUpdate();
     renderer.render(scene, camera) // Render scene
