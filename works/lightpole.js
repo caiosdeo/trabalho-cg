@@ -47,11 +47,11 @@ function createLightPole(scene, position){
     // sphere.position.copy(lightPosition);
     // sphere.translateY(-9);
 
-    setPointLight(scene, lightPosition, spotLight);
+    setSpotLight(scene, lightPosition, spotLight);
 
     // Set PointLight
     // More info here: https://threejs.org/docs/#api/en/lights/SpotLight
-    function setPointLight(scene, lightPosition, spotLight){
+    function setSpotLight(scene, lightPosition, spotLight){
         spotLight.position.copy(lightPosition);
         spotLight.shadow.mapSize.width = 2048;
         spotLight.shadow.mapSize.height = 2048;
