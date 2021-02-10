@@ -1,40 +1,57 @@
 // Loading the statue
 // loadOBJFile('../objects/','Thai_Female_Sandstone_V2.2',true,1.5);
+// loadFBXFile('../objects/','Thai_Female_Sandstone_V2.2',true,1.5);
+// loadPLYFile('../objects/','Thai_Female_Sandstone_V2.2',true,1.5);
 
-  function loadOBJFile(modelPath, modelName, visibility, desiredScale)
-  {
-    currentModel = modelName;
+// Loading the statue
+// loadFBXFile('./objects', 'raptor', false, 2.5);
+// loadPLYFile('./objects', 'cow', false, 2.0);
 
-    var manager = new THREE.LoadingManager( );
+function loadPLYFile(modelPath, modelName, visibility, desiredScale)
+{
+  var loader = new THREE.PLYLoader( );
+  loader.load( modelPath + modelName + '.ply', function ( geometry ) {
 
-    var mtlLoader = new THREE.MTLLoader( manager );
-    mtlLoader.setPath( modelPath );
-    mtlLoader.load( modelName + '.mtl', function ( materials ) {
-         materials.preload();
+    geometry.computeVertexNormals();
 
-         var objLoader = new THREE.OBJLoader( manager );
-         objLoader.setMaterials(materials);
-         objLoader.setPath(modelPath);
-         objLoader.load( modelName + ".obj", function ( obj ) {
-           obj.name = modelName;
-           obj.visible = visibility;
-           // Set 'castShadow' property for each children of the group
-           obj.traverse( function (child)
-           {
-             child.castShadow = true;
-           });
+    var material = new THREE.MeshPhongMaterial({color:"rgb(255,120,50)"});
+    var obj = new THREE.Mesh( geometry, material );
 
-           obj.traverse( function( node )
-           {
-             if( node.material ) node.material.side = THREE.DoubleSide;
-           });
+    obj.name = modelName;
+    obj.visible = visibility;
+    obj.castShadow = true;
 
-           var obj = normalizeAndRescale(obj, desiredScale);
-           var obj = fixPosition(obj);
+    var obj = normalizeAndRescale(obj, desiredScale);
+    var obj = fixPosition(obj);
 
-           scene.add ( obj );
-           objectArray.push( obj );
+    scene.add( obj );
+    objectArray.push( obj );
 
-         }, onProgress, onError );
+    }, onProgress, onError);
+}
+
+function loadFBXFile(modelPath, modelName, visibility, desiredScale)
+{
+  var loader = new THREE.FBXLoader( );
+  loader.load( modelPath + modelName + '.fbx', function ( object ) {
+    var obj = object;
+    obj.name = modelName;
+    obj.visible = visibility;
+    obj.traverse( function ( child ) {
+      if ( child ) {
+         child.castShadow = true;
+      }
     });
-  }
+    obj.traverse( function( node )
+    {
+      if( node.material ) node.material.side = THREE.DoubleSide;
+    });
+
+    var obj = normalizeAndRescale(obj, desiredScale);
+    var obj = fixPosition(obj);
+
+    scene.add ( obj );
+    objectArray.push( obj );
+
+    }, onProgress, onError);
+}
