@@ -3,7 +3,7 @@ function behindKartCamera(camera, kart, kartY, kartX) {
   var upVec = new THREE.Vector3(0, 0, 1);
   let lookAt = new THREE.Vector3(kartY, kartX, 1.5);
   
-  var relativeCameraOffset = new THREE.Vector3(-40, 0, 20);
+  var relativeCameraOffset = new THREE.Vector3(-40, 0, 12.5);
   var cameraOffset = relativeCameraOffset.applyMatrix4(kart.matrixWorld);
   camera.position.x = cameraOffset.x;
   camera.position.y = cameraOffset.y;
@@ -38,7 +38,6 @@ function main(){
   // * Coloca o Kart na cena
   let kart = new kartModel();
   let kartFloor = kart.assembleKart(); // * monta o kart
-  // let kartSpeed = kart.getSpeed(); 
   let kartSpeedRate = kart.getSpeedRate();
   let kartSpeed = 0;
   let cameraMode; // * bool pra controlar a camera
@@ -73,22 +72,37 @@ function main(){
   var line = new THREE.LineSegments( wireframe );
   line.material.color.setStyle( "rgb(180, 180, 180)" );  
 
-  function showInformation(){
-    // Use this to show information onscreen
-    controls = new InfoBox();
-      controls.add("Inspeção");
-      controls.addParagraph();
-      controls.add("Use mouse to interact:");
-      controls.add("* Left button to rotate");
-      controls.add("* Right button to translate (pan)");
-      controls.add("* Scroll to zoom in/out.");
-      controls.show();
-  }
-
   // Listen window size changes
   window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
 
+  // Add Kart to the scene
   scene.add(kartFloor);
+
+  // Add sun
+  createSun(scene);
+
+  // Add a pole
+  let polePos = new THREE.Vector3(15,-15,10);
+  createLightPole(scene, polePos);
+
+  let polePos1 = new THREE.Vector3(135,-15,10);
+  createLightPole(scene, polePos1);
+
+  let polePos2 = new THREE.Vector3(255,-15,10);
+  createLightPole(scene, polePos2);
+
+  let polePos3 = new THREE.Vector3(375,-15,10);
+  createLightPole(scene, polePos3);
+
+  let polePos4 = new THREE.Vector3(500,-15,10);
+  createLightPole(scene, polePos4);
+
+  let polePos5 = new THREE.Vector3(620,-15,10);
+  createLightPole(scene, polePos5);
+
+  let polePos6 = new THREE.Vector3(740,-15,10);
+  createLightPole(scene, polePos6);
+
   render();
 
   function keyboardUpdate() {
@@ -103,7 +117,7 @@ function main(){
       cameraMode = (inspect && !behindKart) ? true : false;
 
       if(cameraMode){
-        inspectCamera(camera, kartFloor, dx, dy);
+        inspectCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
       } else {
         behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
       }
@@ -151,14 +165,28 @@ function main(){
       behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
 
     }
+
+    if(cameraMode){
+      if (keyboard.pressed("right")){ // * Rodas do kart pra direita
+        kart.decrementFrontWheelsAngle(1);
+      }else{
+        kart.correctFrontWheelsLeft();
+      }
+      if (keyboard.pressed("left")){ // * Rodas do kart pra esquerda
+        kart.incrementFrontWheelsAngle(1);
+      }else{
+        kart.correctFrontWheelsRight();
+      }
+    }
+
   }
 
   function render(){
 
     stats.update(); // Update FPS
     if(inspect){
-      trackballControls.target.y = dx;
-      trackballControls.target.x = dy;
+      trackballControls.target.y = kartFloor.position.y;
+      trackballControls.target.x = kartFloor.position.x;
       trackballControls.update(); // Enable mouse movements
       scene.remove(plane);
       scene.remove(line);
@@ -169,7 +197,7 @@ function main(){
       scene.add(line); 
       scene.background = new THREE.Color( "rgb(0, 0, 0)" );;
     }
-    lightFollowingCamera(light, camera);
+    // lightFollowingCamera(light, camera);
     requestAnimationFrame(render);
     keyboardUpdate();
     renderer.render(scene, camera) // Render scene

@@ -121,6 +121,25 @@ class kartModel {
         this.seatBack = new THREE.Mesh(seatBackGeometry, seatBackMaterial);
         this.seatBack.position.set(-2.5, 0, 1.75);
 
+        this.floor.castShadow = true;
+        this.back.castShadow = true;
+        this.fore.castShadow = true;
+        this.right.castShadow = true;
+        this.left.castShadow = true;
+        this.front.castShadow = true;
+        this.frontWing.castShadow = true;
+        this.frontAxis.castShadow = true;
+        this.frontWheelLeft.castShadow = true;
+        this.frontWheelRight.castShadow = true;
+        this.rear.castShadow = true;
+        this.rearWing.castShadow = true;
+        this.spoilerSupportLeft.castShadow = true;
+        this.spoilerSupportRight.castShadow = true;
+        this.spoiler.castShadow = true;
+        this.rearAxis.castShadow = true;
+        this.rearWheelLeft.castShadow = true;
+        this.rearWheelRight.castShadow = true;
+
     }
 
     // * Getters
@@ -130,7 +149,7 @@ class kartModel {
 
     getFloorAngle() {return this.floorAngle;}
 
-    getSpeedX() {return this.speed};
+    getSpeed() {return this.speed};
 
     getSpeedRate() {return this.speedRate};
 
@@ -242,30 +261,21 @@ class kartModel {
         
         this.floor.add(this.back);
         this.floor.add(this.fore);
-
         this.floor.add(this.right);
         this.floor.add(this.left);
 
         this.floor.add(this.front);
-
         this.front.add(this.frontWing);
-
         this.front.add(this.frontAxis);
-
         this.frontAxis.add(this.frontWheelLeft);
         this.frontAxis.add(this.frontWheelRight);
 
         this.floor.add(this.rear);
-
         this.rear.add(this.rearWing);
-
         this.rearWing.add(this.spoilerSupportRight);
         this.rearWing.add(this.spoilerSupportLeft);
-
         this.rearWing.add(this.spoiler);
-
         this.rear.add(this.rearAxis);
-
         this.rearAxis.add(this.rearWheelLeft);
         this.rearAxis.add(this.rearWheelRight);
 
