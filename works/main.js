@@ -103,6 +103,8 @@ function main(){
   let polePos6 = new THREE.Vector3(740,-15,10);
   createLightPole(scene, polePos6);
 
+  loadPLYFile(scene, 'objects/','Thai_Female_Sandstone_V2.2',true,100);
+
   render();
 
   function keyboardUpdate() {
