@@ -41,7 +41,7 @@ function main()
   //----------------------------------
   // Create Convex Geometry
   //----------------------------------
-  var numPoints = 40;
+  var numPoints = 20;
 
   var sphereGeom = new THREE.SphereGeometry(0.2); // Sphere to represent points
   var sphereMaterial = new THREE.MeshPhongMaterial({color:"rgb(255,255,0)"});
@@ -63,10 +63,17 @@ function main()
   buildInterface();
   render();
 
-  function generatePoints(numberOfPoints)
+  function generatePoints(numberOfPoints=20, layers=5, mountainFactor=1.5, factorDiscount=2,heightFactor=3,pertubationFactor=0.11)
   {
     var points = [];
     var maxSize = objectSize;
+    const pi = Math.PI;
+    const euler = Math.E;
+    const aurea = (1 + Math.sqrt(5) / 2);
+    let x, y, z;
+    let xBool = false;
+    let yBool = false;
+    let zBool = false;
     var varAuxPoints = [
                         [5,0,0],
                         [4.25,1,0],[4.75,1.75,0],[3.75,4,0],[2.75,4.85,0],[1,4.55,0],
@@ -77,32 +84,24 @@ function main()
                         [0,-5,0],
                         [1.55,-4.85,0],[3.15,-2.85,0],[4.60,-1.02,0]
                     ];
-    // alert(varAuxPoints[0]);
-    for (var i = 0; i < numberOfPoints/2; i++) {
-    //   var randomX = Math.round(-maxSize + Math.random() * maxSize*2);
-    //   var randomY = Math.round(0.1 + Math.random() * maxSize); //
-    //   var randomZ = Math.round(-maxSize + Math.random() * maxSize*2);
-        
-      points.push(new THREE.Vector3(varAuxPoints[i][0]*1.5, varAuxPoints[i][1]*1.25, 0));
+
+    for(let j = 1; j <= layers; j++){
+
+      for(let i = 0; i < numberOfPoints; i++){
+
+        x = varAuxPoints[i][0]*mountainFactor + xBool*pertubationFactor*pi;
+        y = varAuxPoints[i][1]*mountainFactor+ yBool*pertubationFactor*euler;
+        z = (j-1)*heightFactor + zBool*pertubationFactor*aurea;
+        points.push(new THREE.Vector3(x, y, z));
+        xBool = i % 2 == 0 ? !xBool : xBool;
+        yBool = i % 2 != 0 ? !yBool : yBool;
+        zBool = !zBool;
+
+      }
+
+      mountainFactor /= factorDiscount;
+
     }
-    varAuxPoints = varAuxPoints.sort(() => Math.random() - 0.5)
-    for (var i = 0; i < numberOfPoints/2.15; i++) {
-        //   var randomX = Math.round(-maxSize + Math.random() * maxSize*2);
-        //   var randomY = Math.round(0.1 + Math.random() * maxSize); //
-        //   var randomZ = Math.round(-maxSize + Math.random() * maxSize*2);
-            
-          points.push(new THREE.Vector3(varAuxPoints[i][0]/1.25, varAuxPoints[i][1]/1.85, 4));
-        }
-
-        varAuxPoints = varAuxPoints.sort(() => Math.random() - 0.5)
-        for (var i = 0; i < numberOfPoints/5; i++) {
-            //   var randomX = Math.round(-maxSize + Math.random() * maxSize*2);
-            //   var randomY = Math.round(0.1 + Math.random() * maxSize); //
-            //   var randomZ = Math.round(-maxSize + Math.random() * maxSize*2);
-                
-              points.push(new THREE.Vector3(varAuxPoints[i][0]/1.25, varAuxPoints[i][1]/1.85, 9));
-            }
-
     if(spGroup) spGroup.dispose();
 
     spGroup = new THREE.Geometry();
@@ -130,16 +129,31 @@ function main()
     if(convexGeometry) convexGeometry.dispose();
 
     // First, create the point vector to be used by the convex hull algorithm
-    var localPoints = generatePoints(numPoints);
-    
+    var localPoints1 = generatePoints(numPoints);
+    var localPoints2 = generatePoints(numberOfPoints=numPoints,heightFactor=4);
+    var localPoints3 = generatePoints(numberOfPoints=numPoints,heightFactor=2);
 
     // Then, build the convex geometry with the generated points
-    convexGeometry = new THREE.ConvexBufferGeometry(localPoints);
+    convexGeometry1 = new THREE.ConvexBufferGeometry(localPoints1);
+    convexGeometry2 = new THREE.ConvexBufferGeometry(localPoints2);
+    convexGeometry3 = new THREE.ConvexBufferGeometry(localPoints3);
 
-    object = new THREE.Mesh(convexGeometry, objectMaterial);
-       object.castShadow = castShadow;
-       object.visible = objectVisibility;
-    scene.add(object);
+    object1 = new THREE.Mesh(convexGeometry1, objectMaterial);
+       object1.castShadow = castShadow;
+       object1.visible = objectVisibility;
+    scene.add(object1);
+
+    object2 = new THREE.Mesh(convexGeometry2, objectMaterial);
+       object2.castShadow = castShadow;
+       object2.visible = objectVisibility;
+    object1.add(object2);
+    object2.translateY(7);
+
+    object3 = new THREE.Mesh(convexGeometry3, objectMaterial);
+       object3.castShadow = castShadow;
+       object3.visible = objectVisibility;
+    object1.add(object3);
+    object3.translateX(5);
 
     // Uncomment to view debug information of the renderer
     //console.log(renderer.info);
