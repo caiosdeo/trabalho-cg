@@ -20,7 +20,6 @@ function loadPLYFile(scene, modelPath, modelName, visibility, desiredScale, desi
     obj.position.copy(desiredPosition);
 
     var obj = normalizeAndRescale(obj, desiredScale);
-    var obj = fixPosition(obj);
 
     scene.add( obj );
 
@@ -32,16 +31,6 @@ function normalizeAndRescale(obj, newScale){
   obj.scale.set(newScale * (1.0/scale),
                 newScale * (1.0/scale),
                 newScale * (1.0/scale));
-  return obj;
-}
-
-function fixPosition(obj){
- // Fix position of the object over the ground plane
-  var box = new THREE.Box3().setFromObject( obj );
-  if(box.min.y > 0)
-    obj.translateY(-box.min.y);
-  else
-    obj.translateY(-1*box.min.y);
   return obj;
 }
 

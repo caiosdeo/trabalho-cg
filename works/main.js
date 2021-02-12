@@ -91,7 +91,7 @@ function main(){
   }
 
   // Statue
-  const statuePos = new THREE.Vector3(250,0,0);
+  const statuePos = new THREE.Vector3(250,250,0);
   loadPLYFile(scene, 'objects/','Thai_Female_Sandstone_V2.2',true,50, statuePos);
 
   buildInterface();
