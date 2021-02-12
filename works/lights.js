@@ -9,7 +9,7 @@ function newLightSphere(post, radius, widthSegments, heightSegments, color){
     return object;
 }
 
-function createLightPole(scene, position, poleLight){
+function createLightPole(scene, position, poleLight, rotate){
 
     // * Lightpost
     // Bars
@@ -19,6 +19,7 @@ function createLightPole(scene, position, poleLight){
     scene.add(bar);
     // * Posição vai ser passada por parametro
     bar.translateY(position.y).translateX(position.x).translateZ(20).rotateX(degreesToRadians(270));
+    bar.rotateY(degreesToRadians(rotate));
 
     // Crossbars
     let crossbarGeometry = new THREE.CylinderGeometry(1.75, 1.75, 15, 25);
@@ -59,7 +60,7 @@ function createLightPole(scene, position, poleLight){
         spotLight.power = 10;
         spotLight.castShadow = true;
         spotLight.decay = 2;
-        spotLight.distance = 100;
+        spotLight.distance = 150;
 
         spotLight.translateZ(-3);
 

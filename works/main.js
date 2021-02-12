@@ -39,6 +39,17 @@ function inspectCamera(camera, kart, kartY, kartX) {
   camera.lookAt(lookAt);
 }
 
+function heavenCamera(camera) {
+  
+  var upVec = new THREE.Vector3(0, 0, 1);
+  let lookAt = new THREE.Vector3(0, 0, 0);
+  camera.position.x = 0;
+  camera.position.y = 0;
+  camera.position.z = 1000;
+  camera.up = upVec;
+  camera.lookAt(lookAt);
+}
+
 function main(){
 
   var stats = initStats();          // To show FPS information
@@ -58,7 +69,8 @@ function main(){
   let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); // Init camera in this position
   let cameraLight = new THREE.SpotLight("rgb(255,255,255)");
 
-  behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
+  heavenCamera(camera);
+  // behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
 
   scene.add(cameraLight);
 
@@ -70,7 +82,7 @@ function main(){
 
   //---------------------------------------------------------------------------------------
   // create the ground plane
-  let groundPlane = createGroundPlane(1000.0, 1000.0, "#af992f"); // width and height
+  let groundPlane = createGroundPlane(1000.0, 1000.0, "#bfaa3f"); // width and height
   scene.add(groundPlane);
 
   // Listen window size changes
@@ -78,21 +90,39 @@ function main(){
 
   // Add Kart to the scene
   scene.add(kartFloor);
+  const initialPosition = new THREE.Vector3(0,-275, 1.5);
+  kartFloor.position.copy(initialPosition);
 
   // Add sun
   let sun = new THREE.DirectionalLight("#FFFFFF");
   createSun(scene, sun);
 
   // Create the poles
-  let polesPosition = [new THREE.Vector3(15,-30,10), new THREE.Vector3(135,-30,10), new THREE.Vector3(255,-30,10)];
-  let polesLight = [new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)")];
-  for(i = 0; i < 3; i++){
-    createLightPole(scene, polesPosition[i], polesLight[i]);
+  let polesPosition = [
+    new THREE.Vector3(-350,-350,10), new THREE.Vector3(-150,-350,10), 
+    new THREE.Vector3(50,-350,10), new THREE.Vector3(250,-350,10),
+    new THREE.Vector3(300,400,10), new THREE.Vector3(125,150,10),
+    new THREE.Vector3(-200,200,10), new THREE.Vector3(-400,400,10)
+  ];
+  let polesRotate = [
+    0,0,
+    0,0,
+    270,90,
+    90,90
+  ]
+  let polesLight = [
+    new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)"), 
+    new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)"),
+    new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)"),
+    new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)")
+  ];
+  for(i = 0; i < polesPosition.length; i++){
+    createLightPole(scene, polesPosition[i], polesLight[i], polesRotate[i]);
   }
 
   // Statue
-  const statuePos = new THREE.Vector3(250,250,0);
-  loadPLYFile(scene, 'objects/','Thai_Female_Sandstone_V2.2',true,50, statuePos);
+  const statuePos = new THREE.Vector3(-325,275,0);
+  loadPLYFile(scene, 'objects/','Thai_Female_Sandstone_V2.2',true,150, statuePos);
 
   buildInterface();
   render();
@@ -192,7 +222,7 @@ function main(){
         kart.correctFrontWheelsRight();
       }
 
-      behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
+      // behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
 
     }
 
