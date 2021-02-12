@@ -1,4 +1,4 @@
-function behindKartCamera(camera, kart, kartY, kartX) {
+function behindKartCamera(scene, camera, light, kart, kartY, kartX) {
   
   var upVec = new THREE.Vector3(0, 0, 1);
   let lookAt = new THREE.Vector3(kartY, kartX, 1.5);
@@ -11,6 +11,16 @@ function behindKartCamera(camera, kart, kartY, kartX) {
 
   camera.up = upVec;
   camera.lookAt(lookAt);
+
+  // Camera Light
+  light.position.copy(camera.position);
+  light.decay = 2;
+  light.penumbra = 0.05;
+  light.name = "Camera Light"
+
+  light.target = kart;
+  scene.add( light.target );  
+  light.target.updateMatrixWorld();
   
 }
 
@@ -44,10 +54,13 @@ function main(){
   let inspect = false;
   let behindKart = true; 
 
-  let light  = initDefaultLighting(scene, kartFloor.position);
+  // let light  = initDefaultLighting(scene, kartFloor.position);
   let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); // Init camera in this position
-  
-  behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
+  let cameraLight = new THREE.SpotLight("rgb(255,255,255)");
+
+  behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
+
+  scene.add(cameraLight);
 
   // To use the keyboard
   var keyboard = new KeyboardState();
@@ -56,21 +69,9 @@ function main(){
   var trackballControls = new THREE.TrackballControls( camera, renderer.domElement );
 
   //---------------------------------------------------------------------------------------
-  // create the ground plane with wireframe
-  var planeGeometry = new THREE.PlaneGeometry(7000, 7000, 40, 40);
-  planeGeometry.translate(0.0, 0.0, -0.02); // To avoid conflict with the axeshelper
-  var planeMaterial = new THREE.MeshBasicMaterial({
-      color: "rgba(20, 30, 110)",
-      side: THREE.DoubleSide,
-      polygonOffset: true,
-      polygonOffsetFactor: 1, // positive value pushes polygon further away
-      polygonOffsetUnits: 1
-  });
-  var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-
-  var wireframe = new THREE.WireframeGeometry( planeGeometry );
-  var line = new THREE.LineSegments( wireframe );
-  line.material.color.setStyle( "rgb(180, 180, 180)" );  
+  // create the ground plane
+  let groundPlane = createGroundPlane(1000.0, 1000.0, "#af992f"); // width and height
+  scene.add(groundPlane);
 
   // Listen window size changes
   window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
@@ -79,33 +80,60 @@ function main(){
   scene.add(kartFloor);
 
   // Add sun
-  createSun(scene);
+  let sun = new THREE.DirectionalLight("#FFFFFF");
+  createSun(scene, sun);
 
-  // Add a pole
-  let polePos = new THREE.Vector3(15,-15,10);
-  createLightPole(scene, polePos);
+  // Create the poles
+  let polesPosition = [new THREE.Vector3(15,-30,10), new THREE.Vector3(135,-30,10), new THREE.Vector3(255,-30,10)];
+  let polesLight = [new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)")];
+  for(i = 0; i < 3; i++){
+    createLightPole(scene, polesPosition[i], polesLight[i]);
+  }
 
-  let polePos1 = new THREE.Vector3(135,-15,10);
-  createLightPole(scene, polePos1);
+  // Statue
+  const statuePos = new THREE.Vector3(250,0,0);
+  loadPLYFile(scene, 'objects/','Thai_Female_Sandstone_V2.2',true,50, statuePos);
 
-  let polePos2 = new THREE.Vector3(255,-15,10);
-  createLightPole(scene, polePos2);
-
-  let polePos3 = new THREE.Vector3(375,-15,10);
-  createLightPole(scene, polePos3);
-
-  let polePos4 = new THREE.Vector3(500,-15,10);
-  createLightPole(scene, polePos4);
-
-  let polePos5 = new THREE.Vector3(620,-15,10);
-  createLightPole(scene, polePos5);
-
-  let polePos6 = new THREE.Vector3(740,-15,10);
-  createLightPole(scene, polePos6);
-
-  loadPLYFile(scene, 'objects/','Thai_Female_Sandstone_V2.2',true,100);
-
+  buildInterface();
   render();
+
+  function buildInterface(){
+    //------------------------------------------------------------
+    // Interface
+    var controls = new function (){
+
+      this.sunLightOn = true;
+      this.polesLightOn = true;
+      this.cameraLightOn = true;
+
+      this.viewSunLight = function(){
+        sun.visible = this.sunLightOn;
+      };
+
+      this.viewPolesLight = function(){
+        for (i = 0; i < polesLight.length; i++)
+          polesLight[i].visible = this.polesLightOn;
+      };
+
+      this.viewCameraLight = function(){
+        cameraLight.visible = this.cameraLightOn;
+      };
+
+    };
+
+    var gui = new dat.GUI();
+    let lightUI = gui.addFolder('Lights');
+    lightUI.add(controls, 'sunLightOn', false)
+        .name("Sun")
+        .onChange(function(e) { controls.viewSunLight() });
+        lightUI.add(controls, 'polesLightOn', false)
+        .name("Poles Light")
+        .onChange(function(e) { controls.viewPolesLight() });
+        lightUI.add(controls, 'cameraLightOn', false)
+        .name("Camera Light")
+        .onChange(function(e) { controls.viewCameraLight() });
+
+  }
 
   function keyboardUpdate() {
 
@@ -121,7 +149,7 @@ function main(){
       if(cameraMode){
         inspectCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
       } else {
-        behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
+        behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
       }
 
     }
@@ -164,7 +192,7 @@ function main(){
         kart.correctFrontWheelsRight();
       }
 
-      behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
+      behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
 
     }
 
@@ -190,16 +218,13 @@ function main(){
       trackballControls.target.y = kartFloor.position.y;
       trackballControls.target.x = kartFloor.position.x;
       trackballControls.update(); // Enable mouse movements
-      scene.remove(plane);
-      scene.remove(line);
+      scene.remove(groundPlane);
       scene.background = new THREE.Color( "rgb(20, 30, 110)" );;
     }
     if (!cameraMode){
-      scene.add(plane);
-      scene.add(line); 
+      scene.add(groundPlane);
       scene.background = new THREE.Color( "rgb(0, 0, 0)" );;
     }
-    // lightFollowingCamera(light, camera);
     requestAnimationFrame(render);
     keyboardUpdate();
     renderer.render(scene, camera) // Render scene

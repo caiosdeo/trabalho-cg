@@ -9,7 +9,7 @@ function newLightSphere(post, radius, widthSegments, heightSegments, color){
     return object;
 }
 
-function createLightPole(scene, position){
+function createLightPole(scene, position, poleLight){
 
     // * Lightpost
     // Bars
@@ -29,7 +29,7 @@ function createLightPole(scene, position){
     //---------------------------------------------------------
     // Sphere to represent the light
     let lightSphere = newLightSphere(crossbar, 1.75, 10, 10, "rgb(255,255,0)");
-    lightSphere.translateZ(-1.25).translateY(5.5);
+    lightSphere.translateZ(-1.5).translateY(5.5);
     
     // Default light position, color, ambient color and intensity
     // * A posição da luz vai ser referente a posição do poste ou a posição no mundo da esfera da luz
@@ -38,29 +38,30 @@ function createLightPole(scene, position){
     lightSphere.getWorldPosition(lightPosition);
     //---------------------------------------------------------
     // Create and set all lights
-    var spotLight = new THREE.SpotLight("rgb(255,255,255)");
+    // var spotLight = new THREE.PointLight("rgb(255,255,255)");
 
-    setSpotLight(scene, lightPosition, spotLight);
+    setSpotLight(scene, lightPosition, poleLight);
+
+    bar.castShadow = true;
+    crossbar.castShadow = true;
 
     // Set PointLight
     // More info here: https://threejs.org/docs/#api/en/lights/SpotLight
     function setSpotLight(scene, lightPosition, spotLight){
         spotLight.position.copy(lightPosition);
-        spotLight.shadow.mapSize.width = 2048;
-        spotLight.shadow.mapSize.height = 2048;
-        spotLight.shadow.camera.fov = degreesToRadians(20);
+        spotLight.shadow.mapSize.width = 1024; // default
+        spotLight.shadow.mapSize.height = 1024; // default
+        // spotLight.shadow.camera.fov = 90; // default
+        // spotLight.shadow.camera.aspect = 1;
+        spotLight.shadow.camera.near = 0.5; // default
+        spotLight.shadow.camera.far = 150;
+        spotLight.intensity = 2;
+        spotLight.power = 10;
         spotLight.castShadow = true;
         spotLight.decay = 2;
-        spotLight.penumbra = 0.05;
-        spotLight.name = "Post Light"
+        spotLight.distance = 100;
 
-        const targetObject = new THREE.Object3D();
-        scene.add(targetObject);
-        targetObject.position.copy(lightPosition);
-        targetObject.translateZ(-9);
-        spotLight.target = targetObject;
-        scene.add( spotLight.target );  
-        spotLight.target.updateMatrixWorld();
+        spotLight.translateZ(-3);
 
         scene.add(spotLight);  
         
@@ -68,15 +69,18 @@ function createLightPole(scene, position){
 
 }
 
-function createSun(scene){
-    let sun = new THREE.SpotLight("#FFFFFF");
-    sun.position.set(0,50,0);
+function createSun(scene, sun){
+
     sun.shadow.mapSize.width = 2048;
     sun.shadow.mapSize.height = 2048;
     sun.shadow.camera.fov = degreesToRadians(20);
+
+    sun.position.set(0,0,300);
     sun.castShadow = true;
-    sun.decay = 2;
-    sun.penumbra = 0.05;
+    // sun.decay = 2;
+    // sun.penumbra = 0.05;
     sun.name = "Sun Light"
+    // sun.shadowCameraVisible = true;
+
     scene.add(sun);
 }

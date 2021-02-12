@@ -385,7 +385,7 @@ function createGroundPlane(width, height, gcolor = null)
   if(!gcolor) gcolor = "rgb(200,200,200)";
   // create the ground plane
   var planeGeometry = new THREE.PlaneGeometry(width, height, 10, 10);
-  var planeMaterial = new THREE.MeshLambertMaterial({color:gcolor, side:THREE.DoubleSide});
+  var planeMaterial = new THREE.MeshPhongMaterial({color:gcolor, side:THREE.DoubleSide});
 //  var planeMaterial = new THREE.MeshLambertMaterial({color:"rgb(255,0,0)", side:THREE.DoubleSide});
   var plane = new THREE.Mesh(planeGeometry, planeMaterial);
   plane.receiveShadow = true;

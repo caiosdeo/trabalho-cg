@@ -4,7 +4,7 @@
 // Loading the statue
 // loadPLYFile('./objects', 'cow', false, 2.0);
 
-function loadPLYFile(scene, modelPath, modelName, visibility, desiredScale){
+function loadPLYFile(scene, modelPath, modelName, visibility, desiredScale, desiredPosition){
 
   var loader = new THREE.PLYLoader( );
   loader.load( modelPath + modelName + '.ply', function ( geometry ) {
@@ -17,6 +17,7 @@ function loadPLYFile(scene, modelPath, modelName, visibility, desiredScale){
     obj.name = modelName;
     obj.visible = visibility;
     obj.castShadow = true;
+    obj.position.copy(desiredPosition);
 
     var obj = normalizeAndRescale(obj, desiredScale);
     var obj = fixPosition(obj);
