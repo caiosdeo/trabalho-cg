@@ -69,9 +69,12 @@ function main(){
   let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); // Init camera in this position
   let cameraLight = new THREE.SpotLight("rgb(255,255,255)");
 
-  heavenCamera(camera);
-  // behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
-
+  let heaven = false;
+  if(heaven){
+    heavenCamera(camera);
+  }else{
+    behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
+  }
   scene.add(cameraLight);
 
   // To use the keyboard
@@ -101,7 +104,7 @@ function main(){
   let polesPosition = [
     new THREE.Vector3(-350,-350,10), new THREE.Vector3(-150,-350,10), 
     new THREE.Vector3(50,-350,10), new THREE.Vector3(250,-350,10),
-    new THREE.Vector3(300,400,10), new THREE.Vector3(125,150,10),
+    new THREE.Vector3(360,400,10), new THREE.Vector3(175,150,10),
     new THREE.Vector3(-200,200,10), new THREE.Vector3(-400,400,10)
   ];
   let polesRotate = [
@@ -124,6 +127,12 @@ function main(){
   const statuePos = new THREE.Vector3(-325,275,0);
   loadPLYFile(scene, 'objects/','Thai_Female_Sandstone_V2.2',true,150, statuePos);
 
+  // Mountains
+  let mountOne = createMountOne(new THREE.Vector3(0,175, -3), 12);
+  scene.add(mountOne);
+  let mountTwo = createMountTwo(new THREE.Vector3(390,50, -3), 10);
+  scene.add(mountTwo);
+  
   buildInterface();
   render();
 
@@ -186,13 +195,13 @@ function main(){
 
     if(!cameraMode){
       // Control the kart
-      let rotateAngle = Math.PI / 2 * kartSpeedRate; // pi/2 radians (90 deg) per sec
+      let rotateAngle = Math.PI / 2.5 * kartSpeedRate; // pi/2 radians (90 deg) per sec
 
       if (keyboard.pressed("up")){ // * Aceleração do Kart
-        if(kartSpeed < 100){ // Aceleração máxima em x
+        if(kartSpeed < 5){ // Aceleração máxima em x
           kartSpeed += kartSpeedRate
-          kartFloor.translateX(kartSpeed);
         } 
+        kartFloor.translateX(kartSpeed);
       }else if (keyboard.pressed("down")){ // * Frenagem do Kart - diminui "abruptamente" a velocidade do kart até parar
         if(kartSpeed > 0){
           kartSpeed -= kartSpeedRate*8; // Diminui a velocidade de acordo com o speedRate * factor de frenagem
@@ -222,7 +231,7 @@ function main(){
         kart.correctFrontWheelsRight();
       }
 
-      // behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
+      if(!heaven){behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);}
 
     }
 

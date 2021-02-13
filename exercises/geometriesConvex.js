@@ -131,7 +131,7 @@ function main()
     // First, create the point vector to be used by the convex hull algorithm
     var localPoints1 = generatePoints(numPoints);
     var localPoints2 = generatePoints(numberOfPoints=numPoints,heightFactor=4);
-    var localPoints3 = generatePoints(numberOfPoints=numPoints,heightFactor=2);
+    var localPoints3 = generatePoints(numberOfPoints=numPoints,heightFactor=3);
 
     // Then, build the convex geometry with the generated points
     convexGeometry1 = new THREE.ConvexBufferGeometry(localPoints1);
@@ -147,13 +147,13 @@ function main()
        object2.castShadow = castShadow;
        object2.visible = objectVisibility;
     object1.add(object2);
-    object2.translateY(7);
+    object2.translateY(5);
 
     object3 = new THREE.Mesh(convexGeometry3, objectMaterial);
        object3.castShadow = castShadow;
        object3.visible = objectVisibility;
     object1.add(object3);
-    object3.translateX(5);
+    object3.translateX(4).translateY(3);
 
     // Uncomment to view debug information of the renderer
     //console.log(renderer.info);
