@@ -128,7 +128,8 @@ function main(){
   // Statue
   const statuePos = new THREE.Vector3(-325,275,0);
   loadPLYFile(scene, 'objects/','Thai_Female_Sandstone_V2.2',true,150, statuePos);
-
+  // let statue = scene.getElementByName("Thai_Female_Sandstone_V2.2");
+  // alert(scene.getObjectByName("Thai_Female_Sandstone_V2.2"));
   // Mountains
   let mountOne = createMountOne(new THREE.Vector3(0,175, -3), 12);
   scene.add(mountOne);
