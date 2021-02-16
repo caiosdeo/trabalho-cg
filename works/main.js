@@ -17,6 +17,10 @@ function behindKartCamera(scene, camera, light, kart, kartY, kartX) {
   light.decay = 2;
   light.penumbra = 0.05;
   light.name = "Camera Light"
+  light.angle = degreesToRadians(20);
+
+  let lH = new THREE.SpotLightHelper(light);
+  scene.add(lH);
 
   light.target = kart;
   scene.add( light.target );  
@@ -195,7 +199,7 @@ function main(){
 
     if(!cameraMode){
       // Control the kart
-      let rotateAngle = Math.PI / 2.5 * kartSpeedRate; // pi/2 radians (90 deg) per sec
+      let rotateAngle = Math.PI / 2 * kartSpeedRate; // pi/2 radians (90 deg) per sec
 
       if (keyboard.pressed("up")){ // * Aceleração do Kart
         if(kartSpeed < 5){ // Aceleração máxima em x
