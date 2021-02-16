@@ -130,9 +130,9 @@ function main(){
   // let statue = scene.getElementByName("Thai_Female_Sandstone_V2.2");
   // alert(scene.getObjectByName("Thai_Female_Sandstone_V2.2"));
   // Mountains
-  let mountOne = createMountOne(new THREE.Vector3(0,175, -3), 12);
+  let mountOne = createMountOne(new THREE.Vector3(0,175, 0), 12);
   scene.add(mountOne);
-  let mountTwo = createMountTwo(new THREE.Vector3(390,50, -3), 10);
+  let mountTwo = createMountTwo(new THREE.Vector3(390,50, 0), 10);
   scene.add(mountTwo);
   
   buildInterface();
