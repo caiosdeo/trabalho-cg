@@ -41,30 +41,30 @@ function createLightPole(scene, position, poleLight, rotate){
     // Create and set all lights
     // var spotLight = new THREE.PointLight("rgb(255,255,255)");
 
-    setSpotLight(scene, lightPosition, poleLight);
+    setPointLight(scene, lightPosition, poleLight);
 
     bar.castShadow = true;
     crossbar.castShadow = true;
 
     // Set PointLight
     // More info here: https://threejs.org/docs/#api/en/lights/SpotLight
-    function setSpotLight(scene, lightPosition, spotLight){
-        spotLight.position.copy(lightPosition);
-        spotLight.shadow.mapSize.width = 1024; // default
-        spotLight.shadow.mapSize.height = 1024; // default
+    function setPointLight(scene, lightPosition, pointLight){
+        pointLight.position.copy(lightPosition);
+        pointLight.shadow.mapSize.width = 1024; // default
+        pointLight.shadow.mapSize.height = 1024; // default
         // spotLight.shadow.camera.fov = 90; // default
         // spotLight.shadow.camera.aspect = 1;
-        spotLight.shadow.camera.near = 0.5; // default
-        spotLight.shadow.camera.far = 150;
-        spotLight.intensity = 2;
-        spotLight.power = 10;
-        spotLight.castShadow = true;
-        spotLight.decay = 2;
-        spotLight.distance = 150;
+        pointLight.shadow.camera.near = 0.5; // default
+        pointLight.shadow.camera.far = 150;
+        pointLight.intensity = 2;
+        pointLight.power = 10;
+        pointLight.castShadow = true;
+        pointLight.decay = 2;
+        pointLight.distance = 150;
 
-        spotLight.translateZ(-3);
+        pointLight.translateZ(-3);
 
-        scene.add(spotLight);  
+        scene.add(pointLight);  
         
     }
 
