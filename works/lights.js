@@ -39,7 +39,6 @@ function createLightPole(scene, position, poleLight, rotate){
     lightSphere.getWorldPosition(lightPosition);
     //---------------------------------------------------------
     // Create and set all lights
-    // var spotLight = new THREE.PointLight("rgb(255,255,255)");
 
     setPointLight(scene, lightPosition, poleLight);
 
@@ -68,6 +67,7 @@ function createLightPole(scene, position, poleLight, rotate){
         
     }
 
+    return bar;
 }
 
 function createSun(scene, sun){

@@ -19,9 +19,6 @@ function behindKartCamera(scene, camera, light, kart, kartY, kartX) {
   light.name = "Camera Light"
   light.angle = degreesToRadians(20);
 
-  let lH = new THREE.SpotLightHelper(light);
-  scene.add(lH);
-
   light.target = kart;
   scene.add( light.target );  
   light.target.updateMatrixWorld();
@@ -123,8 +120,9 @@ function main(){
     new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)"),
     new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)")
   ];
+  let poles = [];
   for(i = 0; i < polesPosition.length; i++){
-    createLightPole(scene, polesPosition[i], polesLight[i], polesRotate[i]);
+    poles[i] = createLightPole(scene, polesPosition[i], polesLight[i], polesRotate[i]);
   }
 
   // Statue
@@ -262,10 +260,20 @@ function main(){
       trackballControls.target.x = kartFloor.position.x;
       trackballControls.update(); // Enable mouse movements
       scene.remove(groundPlane);
+      scene.remove(mountOne);
+      scene.remove(mountTwo);
+      for (i = 0; i < polesPosition.length; i++){
+        scene.remove(poles[i]);
+      }
       scene.background = new THREE.Color( "rgb(20, 30, 110)" );;
     }
     if (!cameraMode){
       scene.add(groundPlane);
+      scene.add(mountOne);
+      scene.add(mountTwo);
+      for (i = 0; i < poles.length; i++){
+        scene.add(poles[i]);
+      }
       scene.background = new THREE.Color( "rgb(0, 0, 0)" );;
     }
     requestAnimationFrame(render);
