@@ -17,7 +17,6 @@ function behindKartCamera(scene, camera, light, kart, kartY, kartX) {
   light.decay = 2;
   light.penumbra = 0.05;
   light.name = "Camera Light"
-  light.angle = degreesToRadians(20);
 
   light.target = kart;
   scene.add( light.target );  
