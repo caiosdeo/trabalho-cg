@@ -4,7 +4,7 @@ const mountainOpacity = 1.0;
 const numPoints = 20;
 
 // Object Material
-const mountainMaterial = new THREE.MeshPhongMaterial({
+const mountainMaterial = new THREE.MeshLambertMaterial({
     color: mountainColor,
     opacity: mountainOpacity,
     transparent: true});
