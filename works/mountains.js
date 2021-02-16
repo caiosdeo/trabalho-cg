@@ -48,7 +48,7 @@ function generatePoints(numberOfPoints=20, layers=5, mountainFactor=1.5, factorD
 
             x = varAuxPoints[i][0]*mountainFactor + xBool*pertubationFactor*pi; // pertubates points with pi when xBool is true
             y = varAuxPoints[i][1]*mountainFactor+ yBool*pertubationFactor*euler; // pertubates points with euler when yBool is true
-            z = (j-1)*heightFactor + zBool*pertubationFactor*aurea; // pertubates points with aurea when zBool is true
+            z = j-1 == 0 ? 0 : (j-1)*heightFactor + zBool*pertubationFactor*aurea; // pertubates points with aurea when zBool is true
             points.push(new THREE.Vector3(x, y, z)); // Push the points to the list
             xBool = i % 2 == 0 ? !xBool : xBool; // Updates the bool value when i is even
             yBool = i % 2 != 0 ? !yBool : yBool; // Updates the bool value when i is odd
