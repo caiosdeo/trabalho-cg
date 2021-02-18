@@ -85,7 +85,10 @@ function main(){
 
   //---------------------------------------------------------------------------------------
   // create the ground plane
-  let groundPlane = createGroundPlane(1000.0, 1000.0, "#bfaa3f"); // width and height
+  var planeGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+  var planeMaterial = new THREE.MeshPhongMaterial({color:"#bfaa3f", side:THREE.DoubleSide});
+  var groundPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+  groundPlane.receiveShadow = true;
   scene.add(groundPlane);
 
   // Listen window size changes
