@@ -28,6 +28,7 @@ var list = {
 				"Three Lights": "html/lightPreview"
 			},
 			"Textures":  {
+				"Textures": "html/texturePreview"
 			},
 		},
 	},
