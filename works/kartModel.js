@@ -145,6 +145,10 @@ class kartModel {
     // * Getters
     getFloor() { return this.floor};
 
+    getFrontWing() {
+        return this.frontWing;
+    }
+
     getFrontWheelsAngle() { return this.frontWheelsAngle; }
 
     getFloorAngle() {return this.floorAngle;}
@@ -214,7 +218,7 @@ class kartModel {
     correctFrontWheelsLeft(){
 
         if(this.frontWheelsAngle < 0){
-            this.frontWheelsAngle += 1;
+            this.frontWheelsAngle += 3;
 
             this.frontWheelLeft.matrixAutoUpdate = false;
             this.frontWheelRight.matrixAutoUpdate = false;
@@ -237,7 +241,7 @@ class kartModel {
     correctFrontWheelsRight(){
 
         if(this.frontWheelsAngle > 0){
-            this.frontWheelsAngle -= 1;
+            this.frontWheelsAngle -= 3;
 
             this.frontWheelLeft.matrixAutoUpdate = false;
             this.frontWheelRight.matrixAutoUpdate = false;

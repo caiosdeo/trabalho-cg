@@ -1,7 +1,7 @@
-function behindKartCamera(scene, camera, light, kart, kartY, kartX) {
+function behindKartCamera(scene, camera, light, kart, kartX, kartY) {
   
   var upVec = new THREE.Vector3(0, 0, 1);
-  let lookAt = new THREE.Vector3(kartY, kartX, 1.5);
+  let lookAt = new THREE.Vector3(kartX, kartY, 1.5);
   
   var relativeCameraOffset = new THREE.Vector3(-40, 0, 12.5);
   var cameraOffset = relativeCameraOffset.applyMatrix4(kart.matrixWorld);
@@ -19,6 +19,32 @@ function behindKartCamera(scene, camera, light, kart, kartY, kartX) {
   light.name = "Camera Light"
 
   light.target = kart;
+  scene.add( light.target );  
+  light.target.updateMatrixWorld();
+  
+}
+
+function cockpitCamera(scene, camera, light, wing, wingX, wingY) {
+
+  var upVec = new THREE.Vector3(0, 0, 1);
+  let lookAt = new THREE.Vector3(wingX, wingY, 4);
+  
+  var relativeCameraOffset = new THREE.Vector3(-22, 0, 5.5);
+  var cameraOffset = relativeCameraOffset.applyMatrix4(wing.matrixWorld);
+  camera.position.x = cameraOffset.x;
+  camera.position.y = cameraOffset.y;
+  camera.position.z = cameraOffset.z;
+
+  camera.up = upVec;
+  camera.lookAt(lookAt);
+
+  // Camera Light
+  light.position.copy(camera.position);
+  light.decay = 2;
+  light.penumbra = 0.05;
+  light.name = "Camera Light"
+
+  light.target = wing;
   scene.add( light.target );  
   light.target.updateMatrixWorld();
   
@@ -55,26 +81,20 @@ function main(){
   var stats = initStats();          // To show FPS information
   var scene = new THREE.Scene();    // Create main scene
   var renderer = initRenderer();    // View function in util/utils
-  
+  var textureLoader = new THREE.TextureLoader();
+
   // * Coloca o Kart na cena
   let kart = new kartModel();
   let kartFloor = kart.assembleKart(); // * monta o kart
   let kartSpeedRate = kart.getSpeedRate();
   let kartSpeed = 0;
-  let cameraMode; // * bool pra controlar a camera
-  let inspect = false;
-  let behindKart = true; 
+
+  // * behind 0, cockpit 1, inspect 2, heaven 3
+  let activeCamera = 1;
 
   // let light  = initDefaultLighting(scene, kartFloor.position);
   let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); // Init camera in this position
   let cameraLight = new THREE.SpotLight("rgb(255,255,255)");
-
-  let heaven = false;
-  if(heaven){
-    heavenCamera(camera);
-  }else{
-    behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
-  }
   scene.add(cameraLight);
 
   // To use the keyboard
@@ -85,8 +105,9 @@ function main(){
 
   //---------------------------------------------------------------------------------------
   // create the ground plane
+  let track = textureLoader.load('../works/assets/textures/pista.jpg')
   var planeGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
-  var planeMaterial = new THREE.MeshPhongMaterial({color:"#bfaa3f", side:THREE.DoubleSide});
+  var planeMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:track});
   var groundPlane = new THREE.Mesh(planeGeometry, planeMaterial);
   groundPlane.receiveShadow = true;
   scene.add(groundPlane);
@@ -96,8 +117,24 @@ function main(){
 
   // Add Kart to the scene
   scene.add(kartFloor);
-  const initialPosition = new THREE.Vector3(0,-275, 1.5);
+  const initialPosition = new THREE.Vector3(0,-325, 1.5);
   kartFloor.position.copy(initialPosition);
+
+  // Cockpit Camera Target
+  let frontWingGeometry = new THREE.BoxGeometry(2, 8, 3);
+  let frontWingMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)'});
+  frontWing = new THREE.Mesh(frontWingGeometry, frontWingMaterial);
+  frontWing.visible = false;
+  frontWing.position.set(30.0, 0.0, 1.0);
+  kartFloor.add(frontWing);
+
+  scene.updateMatrixWorld();
+
+  let cockpitTarget = new THREE.Vector3(); // create once an reuse it
+  frontWing.getWorldPosition( cockpitTarget );
+  const targetObject = new THREE.Object3D();
+  scene.add(targetObject);
+  targetObject.position.copy(cockpitTarget);
 
   // Add sun
   let sun = new THREE.DirectionalLight("#FFFFFF");
@@ -105,10 +142,10 @@ function main(){
 
   // Create the poles
   let polesPosition = [
-    new THREE.Vector3(-350,-350,10), new THREE.Vector3(-150,-350,10), 
-    new THREE.Vector3(50,-350,10), new THREE.Vector3(250,-350,10),
-    new THREE.Vector3(360,400,10), new THREE.Vector3(175,150,10),
-    new THREE.Vector3(-200,200,10), new THREE.Vector3(-400,400,10)
+    new THREE.Vector3(-350,-375,10), new THREE.Vector3(-150,-385,10), 
+    new THREE.Vector3(50,-385,10), new THREE.Vector3(250,-385,10),
+    new THREE.Vector3(440,400,10), new THREE.Vector3(65,150,10),
+    new THREE.Vector3(-160,200,10), new THREE.Vector3(-440,400,10)
   ];
   let polesRotate = [
     0,0,
@@ -130,12 +167,11 @@ function main(){
   // Statue
   const statuePos = new THREE.Vector3(-325,275,0);
   loadPLYFile(scene, 'assets/','Thai_Female_Sandstone_V2.2',true,80, statuePos);
-  // let statue = scene.getElementByName("Thai_Female_Sandstone_V2.2");
-  // alert(scene.getObjectByName("Thai_Female_Sandstone_V2.2"));
+
   // Mountains
-  let mountOne = createMountOne(new THREE.Vector3(0,175, 0), 12);
+  let mountOne = createMountOne(new THREE.Vector3(-22,-15, 0), 11);
   scene.add(mountOne);
-  let mountTwo = createMountTwo(new THREE.Vector3(390,50, 0), 10);
+  let mountTwo = createMountTwo(new THREE.Vector3(425,120, 0), 10);
   scene.add(mountTwo);
   
   buildInterface();
@@ -186,19 +222,16 @@ function main(){
     // Change camera
     if ( keyboard.down("space") ){ 
 
-      inspect = !inspect;
-      behindKart = !behindKart;
-      cameraMode = (inspect && !behindKart) ? true : false;
-
-      if(cameraMode){
-        inspectCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
-      } else {
-        behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
+      if (activeCamera < 3){
+        activeCamera++;
+      }else{
+        activeCamera = 0;
       }
 
+      updateCamera();
     }
 
-    if(!cameraMode){
+    if(activeCamera == 0 || activeCamera == 1 || activeCamera == 3){
       // Control the kart
       let rotateAngle = Math.PI / 2 * kartSpeedRate; // pi/2 radians (90 deg) per sec
 
@@ -220,27 +253,27 @@ function main(){
       }
 
       if (keyboard.pressed("right")){ // * Rodas do kart pra direita
-        kart.decrementFrontWheelsAngle(1);
+        kart.decrementFrontWheelsAngle(3);
         if(kartSpeed > 0){
           kartFloor.rotateOnAxis(new THREE.Vector3(0,0,1), -rotateAngle);
+          targetObject.rotateOnAxis(new THREE.Vector3(0,0,1), -rotateAngle);
         }
       }else{
         kart.correctFrontWheelsLeft();
       }
       if (keyboard.pressed("left")){ // * Rodas do kart pra esquerda
-        kart.incrementFrontWheelsAngle(1);
+        kart.incrementFrontWheelsAngle(3);
         if(kartSpeed > 0){
           kartFloor.rotateOnAxis(new THREE.Vector3(0,0,1), rotateAngle);
+          targetObject.rotateOnAxis(new THREE.Vector3(0,0,1), rotateAngle);
         }
       }else{
         kart.correctFrontWheelsRight();
       }
 
-      if(!heaven){behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);}
-
     }
 
-    if(cameraMode){
+    if(activeCamera == 2){
       if (keyboard.pressed("right")){ // * Rodas do kart pra direita
         kart.decrementFrontWheelsAngle(1);
       }else{
@@ -253,12 +286,35 @@ function main(){
       }
     }
 
+    frontWing.getWorldPosition( cockpitTarget );
+    targetObject.position.copy(cockpitTarget);
+    if(activeCamera == 0){behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);}
+    if(activeCamera == 1){cockpitCamera(scene, camera, cameraLight, targetObject, cockpitTarget.x, cockpitTarget.y)}
+  }
+
+  
+  function updateCamera(){
+    switch (activeCamera) {
+      case 0:
+        behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
+        break;
+      case 1:
+        cockpitCamera(scene, camera, cameraLight, targetObject, cockpitTarget.x, cockpitTarget.y);
+        break;
+      case 2:
+        inspectCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
+        break;
+      case 3:
+        heavenCamera(camera);
+        break;
+    }
   }
 
   function render(){
 
     stats.update(); // Update FPS
-    if(inspect){
+
+    if(activeCamera == 2){
       trackballControls.target.y = kartFloor.position.y;
       trackballControls.target.x = kartFloor.position.x;
       trackballControls.update(); // Enable mouse movements
@@ -270,7 +326,8 @@ function main(){
       }
       scene.background = new THREE.Color( "rgb(20, 30, 110)" );;
     }
-    if (!cameraMode){
+
+    if (activeCamera != 2){
       scene.add(groundPlane);
       scene.add(mountOne);
       scene.add(mountTwo);
@@ -279,6 +336,7 @@ function main(){
       }
       scene.background = new THREE.Color( "rgb(0, 0, 0)" );;
     }
+    
     requestAnimationFrame(render);
     keyboardUpdate();
     renderer.render(scene, camera) // Render scene
