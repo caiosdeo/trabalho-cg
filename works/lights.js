@@ -75,8 +75,6 @@ function createLightPole(scene, position, poleLight, rotate){
 
         scene.add(spotLight);  
         
-        let lightHelp = new THREE.SpotLightHelper(spotLight);
-        scene.add(lightHelp);
     }
 
     return bar;

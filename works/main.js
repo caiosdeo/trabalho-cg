@@ -81,7 +81,34 @@ function main(){
   var stats = initStats();          // To show FPS information
   var scene = new THREE.Scene();    // Create main scene
   var renderer = initRenderer();    // View function in util/utils
-  var textureLoader = new THREE.TextureLoader();
+  const textureLoader = new THREE.TextureLoader();
+
+  function createPathStrings(filename) {
+    const basePath = "/works/assets/textures/";
+    const baseFilename = basePath + filename;
+    const fileType = ".bmp";
+    const sides = ["Front", "Back", "Top", "Bottom", "Right", "Left"];
+    const pathStings = sides.map(side => {
+      return baseFilename + "_" + side + fileType;
+    });
+    return pathStings;
+  }
+
+  function createMaterialArray(filename) {
+    const skyboxImagepaths = createPathStrings(filename);
+    const materialArray = skyboxImagepaths.map(image => {
+      let texture = textureLoader.load(image);
+      return new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
+    });
+    return materialArray;
+  }
+
+  // Create skybox
+  const skyboxImage = "Daylight Box"
+  const skyboxMaterialArray = createMaterialArray(skyboxImage);
+  const skyboxGeo = new THREE.BoxGeometry(5000, 5000, 10000);
+  let skybox = new THREE.Mesh(skyboxGeo,skyboxMaterialArray);
+  scene.add(skybox);
 
   // * Coloca o Kart na cena
   let kart = new kartModel();
@@ -90,10 +117,10 @@ function main(){
   let kartSpeed = 0;
 
   // * behind 0, cockpit 1, inspect 2, heaven 3
-  let activeCamera = 3;
+  let activeCamera = 1;
 
   // let light  = initDefaultLighting(scene, kartFloor.position);
-  let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); // Init camera in this position
+  let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 10000); // Init camera in this position
   let cameraLight = new THREE.SpotLight("rgb(255,255,255)");
   scene.add(cameraLight);
 
@@ -337,7 +364,7 @@ function main(){
       for (i = 0; i < polesPosition.length; i++){
         scene.remove(poles[i]);
       }
-      scene.background = new THREE.Color( "rgb(20, 30, 110)" );;
+      // scene.background = new THREE.Color( "rgb(20, 30, 110)" );;
     }
 
     if (activeCamera != 2){
@@ -348,7 +375,7 @@ function main(){
       for (i = 0; i < poles.length; i++){
         scene.add(poles[i]);
       }
-      scene.background = new THREE.Color( "rgb(0, 0, 0)" );;
+      // scene.background = new THREE.Color( "rgb(0, 0, 0)" );;
     }
     
     requestAnimationFrame(render);
