@@ -90,7 +90,7 @@ function main(){
   let kartSpeed = 0;
 
   // * behind 0, cockpit 1, inspect 2, heaven 3
-  let activeCamera = 1;
+  let activeCamera = 0;
 
   // let light  = initDefaultLighting(scene, kartFloor.position);
   let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); // Init camera in this position
@@ -105,19 +105,30 @@ function main(){
 
   //---------------------------------------------------------------------------------------
   // create the ground plane
-  let track = textureLoader.load('../works/assets/textures/pista.jpg')
-  var planeGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
-  var planeMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:track});
-  var groundPlane = new THREE.Mesh(planeGeometry, planeMaterial);
-  groundPlane.receiveShadow = true;
-  scene.add(groundPlane);
+  let track = textureLoader.load('../works/assets/textures/pista.jpg');
+  var trackPlaneGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+  var trackPlaneMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:track});
+  var trackPlane = new THREE.Mesh(trackPlaneGeometry, trackPlaneMaterial);
+  trackPlane.receiveShadow = true;
+  scene.add(trackPlane);
+  // create sand plane 
+  let sand = textureLoader.load('../works/assets/textures/sand.jpg');
+  sand.wrapS = THREE.RepeatWrapping;
+  sand.wrapT = THREE.RepeatWrapping;
+  sand.repeat.set( 5.5, 5.5 );
+  var sandPlaneGeometry = new THREE.PlaneGeometry(2000, 2000);
+  var sandPlaneMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:sand});
+  var sandPlane = new THREE.Mesh(sandPlaneGeometry, sandPlaneMaterial);
+  sandPlane.receiveShadow = true;
+  sandPlane.translateZ(-0.1);
+  scene.add(sandPlane);
 
   // Listen window size changes
   window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
 
   // Add Kart to the scene
   scene.add(kartFloor);
-  const initialPosition = new THREE.Vector3(0,-325, 1.5);
+  const initialPosition = new THREE.Vector3(0,-500, 1.5);
   kartFloor.position.copy(initialPosition);
 
   // Cockpit Camera Target
@@ -318,7 +329,8 @@ function main(){
       trackballControls.target.y = kartFloor.position.y;
       trackballControls.target.x = kartFloor.position.x;
       trackballControls.update(); // Enable mouse movements
-      scene.remove(groundPlane);
+      scene.remove(trackPlane);
+      scene.remove(sandPlane);
       scene.remove(mountOne);
       scene.remove(mountTwo);
       for (i = 0; i < polesPosition.length; i++){
@@ -328,7 +340,8 @@ function main(){
     }
 
     if (activeCamera != 2){
-      scene.add(groundPlane);
+      scene.add(trackPlane);
+      scene.add(sandPlane);
       scene.add(mountOne);
       scene.add(mountTwo);
       for (i = 0; i < poles.length; i++){
