@@ -27,6 +27,9 @@ function createLightPole(scene, position, poleLight, rotate){
     bar.add(crossbar);
     crossbar.rotateX(degreesToRadians(90)).translateY(4.5).translateZ(17.5);
 
+    bar.castShadow = true;
+    crossbar.castShadow = true;
+
     //---------------------------------------------------------
     // Sphere to represent the light
     let lightSphere = newLightSphere(crossbar, 1.75, 10, 10, "rgb(255,255,0)");
@@ -40,31 +43,40 @@ function createLightPole(scene, position, poleLight, rotate){
     //---------------------------------------------------------
     // Create and set all lights
 
-    setPointLight(scene, lightPosition, poleLight);
-
-    bar.castShadow = true;
-    crossbar.castShadow = true;
+    setSpotLight(scene, lightPosition, poleLight);
 
     // Set PointLight
     // More info here: https://threejs.org/docs/#api/en/lights/SpotLight
-    function setPointLight(scene, lightPosition, pointLight){
-        pointLight.position.copy(lightPosition);
-        pointLight.shadow.mapSize.width = 1024; // default
-        pointLight.shadow.mapSize.height = 1024; // default
-        // spotLight.shadow.camera.fov = 90; // default
-        // spotLight.shadow.camera.aspect = 1;
-        pointLight.shadow.camera.near = 0.5; // default
-        pointLight.shadow.camera.far = 150;
-        pointLight.intensity = 2;
-        pointLight.power = 10;
-        pointLight.castShadow = true;
-        pointLight.decay = 2;
-        pointLight.distance = 150;
+    function setSpotLight(scene, lightPosition, spotLight){
+        spotLight.position.copy(lightPosition);
+        spotLight.shadow.mapSize.width = 2048;
+        spotLight.shadow.mapSize.height = 2048;
+        spotLight.shadow.camera.fov = degreesToRadians(20);
+        spotLight.castShadow = true;
+        spotLight.decay = 2;
+        spotLight.penumbra = 0.05;
+        spotLight.name = "Post Light"
 
-        pointLight.translateZ(-3);
+        const targetObject = new THREE.Object3D();
+        scene.add(targetObject);
+        targetObject.position.copy(lightPosition);
 
-        scene.add(pointLight);  
+        if(rotate == 0){
+            targetObject.translateZ(-9).translateY(2.5);
+        }else if (rotate == 90){
+            targetObject.translateZ(-9).translateX(2.5);
+        }else if (rotate == 270){
+            targetObject.translateZ(-9).translateX(-2.5);
+        }
+
+        spotLight.target = targetObject;
+        scene.add( spotLight.target );  
+        spotLight.target.updateMatrixWorld();
+
+        scene.add(spotLight);  
         
+        let lightHelp = new THREE.SpotLightHelper(spotLight);
+        scene.add(lightHelp);
     }
 
     return bar;

@@ -90,7 +90,7 @@ function main(){
   let kartSpeed = 0;
 
   // * behind 0, cockpit 1, inspect 2, heaven 3
-  let activeCamera = 0;
+  let activeCamera = 3;
 
   // let light  = initDefaultLighting(scene, kartFloor.position);
   let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000); // Init camera in this position
@@ -165,10 +165,10 @@ function main(){
     90,90
   ]
   let polesLight = [
-    new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)"), 
-    new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)"),
-    new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)"),
-    new THREE.PointLight("rgb(255,255,255)"), new THREE.PointLight("rgb(255,255,255)")
+    new THREE.SpotLight("rgb(255,255,255)"), new THREE.SpotLight("rgb(255,255,255)"), 
+    new THREE.SpotLight("rgb(255,255,255)"), new THREE.SpotLight("rgb(255,255,255)"),
+    new THREE.SpotLight("rgb(255,255,255)"), new THREE.SpotLight("rgb(255,255,255)"),
+    new THREE.SpotLight("rgb(255,255,255)"), new THREE.SpotLight("rgb(255,255,255)")
   ];
   let poles = [];
   for(i = 0; i < polesPosition.length; i++){
@@ -301,6 +301,7 @@ function main(){
     targetObject.position.copy(cockpitTarget);
     if(activeCamera == 0){behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);}
     if(activeCamera == 1){cockpitCamera(scene, camera, cameraLight, targetObject, cockpitTarget.x, cockpitTarget.y)}
+    if(activeCamera == 3){heavenCamera(camera)}
   }
 
   
