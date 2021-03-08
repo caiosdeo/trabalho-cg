@@ -88,17 +88,17 @@ function main(){
     const baseFilename = basePath + filename;
     const fileType = ".bmp";
     const sides = ["Front", "Back", "Top", "Bottom", "Right", "Left"];
-    const pathStings = sides.map(side => {
+    const pathStrings = sides.map(side => {
       return baseFilename + "_" + side + fileType;
     });
-    return pathStings;
+    return pathStrings;
   }
 
   function createMaterialArray(filename) {
     const skyboxImagepaths = createPathStrings(filename);
     const materialArray = skyboxImagepaths.map(image => {
       let texture = textureLoader.load(image);
-      return new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
+      return new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
     });
     return materialArray;
   }
@@ -106,9 +106,28 @@ function main(){
   // Create skybox
   const skyboxImage = "Daylight Box"
   const skyboxMaterialArray = createMaterialArray(skyboxImage);
-  const skyboxGeo = new THREE.BoxGeometry(5000, 5000, 10000);
-  let skybox = new THREE.Mesh(skyboxGeo,skyboxMaterialArray);
-  scene.add(skybox);
+
+  // Skybox planes
+  const skyboxPlaneGeometry = new THREE.PlaneGeometry(2000, 2000, 10, 10);
+  let skyboxFront = new THREE.Mesh(skyboxPlaneGeometry, skyboxMaterialArray[0]);
+  scene.add(skyboxFront);
+  skyboxFront.translateX(1000).rotateY(degreesToRadians(270)).rotateZ(degreesToRadians(270));
+  let skyboxBack = new THREE.Mesh(skyboxPlaneGeometry, skyboxMaterialArray[1]);
+  scene.add(skyboxBack);
+  skyboxBack.translateX(-1000).rotateY(degreesToRadians(90)).rotateZ(degreesToRadians(90));
+  let skyboxTop = new THREE.Mesh(skyboxPlaneGeometry, skyboxMaterialArray[2]);
+  scene.add(skyboxTop);
+  skyboxTop.translateY(-1000).rotateX(degreesToRadians(90)).rotateY(degreesToRadians(180));
+  let skyboxBottom = new THREE.Mesh(skyboxPlaneGeometry, skyboxMaterialArray[3]);
+  scene.add(skyboxBottom);
+  skyboxBottom.rotateX(degreesToRadians(90)).rotateZ(degreesToRadians(0)).translateZ(-1000);
+  let skyboxLeft = new THREE.Mesh(skyboxPlaneGeometry, skyboxMaterialArray[4]);
+  scene.add(skyboxLeft);
+  skyboxLeft.translateZ(1000).rotateZ(degreesToRadians(180)).rotateY(degreesToRadians(180));
+  let skyboxRight = new THREE.Mesh(skyboxPlaneGeometry, skyboxMaterialArray[5]);
+  scene.add(skyboxRight);
+  skyboxRight.translateZ(-1000);
+
 
   // * Coloca o Kart na cena
   let kart = new kartModel();
@@ -117,9 +136,8 @@ function main(){
   let kartSpeed = 0;
 
   // * behind 0, cockpit 1, inspect 2, heaven 3
-  let activeCamera = 1;
+  let activeCamera = 0;
 
-  // let light  = initDefaultLighting(scene, kartFloor.position);
   let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 10000); // Init camera in this position
   let cameraLight = new THREE.SpotLight("rgb(255,255,255)");
   scene.add(cameraLight);
