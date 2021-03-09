@@ -134,6 +134,8 @@ function main(){
   let kartFloor = kart.assembleKart(); // * monta o kart
   let kartSpeedRate = kart.getSpeedRate();
   let kartSpeed = 0;
+  let kartReverseSpeed = 0;
+  let kartReverseAngle = 0;
 
   // * behind 0, cockpit 1, inspect 2, heaven 3
   let activeCamera = 0;
@@ -301,10 +303,16 @@ function main(){
           kartSpeed -= kartSpeedRate*8; // Diminui a velocidade de acordo com o speedRate * factor de frenagem
           kartFloor.translateX(kartSpeed);
         }
+        else{
+          kartSpeed = 0;
+        }
       }else{ // * Inercia do Kart - diminui a velocidade do kart até parar
         if(kartSpeed > 0){
           kartSpeed -= kartSpeedRate*2
           kartFloor.translateX(kartSpeed);
+        }
+        else{
+          kartSpeed = 0;
         }
       }
 
@@ -326,6 +334,52 @@ function main(){
       }else{
         kart.correctFrontWheelsRight();
       }
+
+      // Reverse car movement
+      // Reverse movement only if kartSpeed is 0
+      if(kartSpeed == 0){
+        // Down for reverse movement
+        if(keyboard.pressed("down")){
+          if(kartReverseSpeed > -2)
+            kartReverseSpeed -= kartSpeedRate;
+        }
+        else{ // * inertia for reverse movement (increments instead decrements)
+          if(kartReverseSpeed < 0){
+            kartReverseSpeed += kartSpeedRate*2
+            kartFloor.translateX(kartSpeed); // !ALERT: coloquei o próprio kartReverseSpeed aqui mas deu ruim, no entanto, funciona com o kartSpeedRate
+          }
+          else{
+            kartReverseSpeed = 0;
+          }
+        }
+        kartFloor.translateX(kartReverseSpeed); // Translates with reverse speed
+        if (keyboard.pressed("right")){ // * Wheels to right
+          kart.decrementFrontWheelsAngle(3);
+          if(kartReverseSpeed < 0){ // * condition for reverseSpeed
+            // angles signs reversed
+            kartFloor.rotateOnAxis(new THREE.Vector3(0,0,1), rotateAngle); 
+            targetObject.rotateOnAxis(new THREE.Vector3(0,0,1), rotateAngle);
+          }
+        }else{
+          kart.correctFrontWheelsLeft();
+        }
+        if (keyboard.pressed("left")){ // * Wheels to left
+          kart.incrementFrontWheelsAngle(3);
+          if(kartReverseSpeed < 0){ // * condition for reverseSpeed
+            // angles signs reversed
+            kartFloor.rotateOnAxis(new THREE.Vector3(0,0,1), -rotateAngle);
+            targetObject.rotateOnAxis(new THREE.Vector3(0,0,1), -rotateAngle);
+          }
+        }else{
+          kart.correctFrontWheelsRight();
+        }
+      }
+
+      // Correct speed values
+      if(kartSpeed > 0)
+        kartReverseSpeed = 0;
+      if(kartReverseSpeed < 0)
+        kartSpeed = 0;
 
     }
 
