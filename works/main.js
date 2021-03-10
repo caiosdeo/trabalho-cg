@@ -224,12 +224,23 @@ function main(){
 
   // Statue
   const statuePos = new THREE.Vector3(-325,275,0);
-  loadPLYFile(scene, 'assets/','Thai_Female_Sandstone_V2.2',true,80, statuePos);
+  loadPLYFile(scene, 'assets/objects/','Thai_Female_Sandstone_V2.2',true,80, statuePos);
+
+  // Statue
+  const flowerPos = new THREE.Vector3(325,275,0);
+  let flowerTexture = textureLoader.load('../works/assets/textures/Flower_0.jpg');
+  loadPLYFile(scene, 'assets/objects/','Flower',true,150, flowerPos, flowerTexture);
+
+  // Statue
+  const goldColumnPos = new THREE.Vector3(250,-385,10)
+  let columnTexture = textureLoader.load('../works/assets/textures/golden_column_0.jpg');
+  columnTexture.crossOrigin = '';
+  loadPLYFile(scene, 'assets/objects/','golden_column',true,100, goldColumnPos, columnTexture );
 
   // Mountains
   let mountOne = createMountOne(new THREE.Vector3(-22,-15, 0), 11);
   scene.add(mountOne);
-  let mountTwo = createMountTwo(new THREE.Vector3(425,120, 0), 10);
+  let mountTwo = createMountTwo(new THREE.Vector3(435,120, 0), 10);
   scene.add(mountTwo);
   
   buildInterface();

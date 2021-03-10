@@ -4,14 +4,17 @@
 // Loading the statue
 // loadPLYFile('./objects', 'cow', false, 2.0);
 
-function loadPLYFile(scene, modelPath, modelName, visibility, desiredScale, desiredPosition){
+function loadPLYFile(scene, modelPath, modelName, visibility, desiredScale, desiredPosition, texture=null){
 
   var loader = new THREE.PLYLoader( );
   loader.load( modelPath + modelName + '.ply', function ( geometry ) {
 
     geometry.computeVertexNormals();
-
-    var material = new THREE.MeshPhongMaterial({color:"rgb(120,120,120)"});
+    if(texture != null){
+      var material = new THREE.MeshPhongMaterial({map:texture,side:THREE.DoubleSide});
+    }else{
+      var material = new THREE.MeshPhongMaterial({color:"rgb(120,120,120)"});
+    }
     var obj = new THREE.Mesh( geometry, material );
 
     obj.name = modelName;
