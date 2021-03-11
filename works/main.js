@@ -162,7 +162,7 @@ function main(){
   let sand = textureLoader.load('../works/assets/textures/sand.jpg');
   sand.wrapS = THREE.RepeatWrapping;
   sand.wrapT = THREE.RepeatWrapping;
-  sand.repeat.set( 5.5, 5.5 );
+  sand.repeat.set( 7, 7 );
   var sandPlaneGeometry = new THREE.PlaneGeometry(2000, 2000);
   var sandPlaneMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:sand});
   var sandPlane = new THREE.Mesh(sandPlaneGeometry, sandPlaneMaterial);
@@ -226,16 +226,14 @@ function main(){
   const statuePos = new THREE.Vector3(-325,275,0);
   loadPLYFile(scene, 'assets/objects/','Thai_Female_Sandstone_V2.2',true,80, statuePos);
 
-  // Statue
+  // Flower
   const flowerPos = new THREE.Vector3(325,275,0);
   let flowerTexture = textureLoader.load('../works/assets/textures/Flower_0.jpg');
-  loadPLYFile(scene, 'assets/objects/','Flower',true,150, flowerPos, flowerTexture);
-
-  // Statue
+  loadOBJFile(scene, 'assets/objects/','Flower',true,150, flowerPos, flowerTexture);
+  // Column
   const goldColumnPos = new THREE.Vector3(250,-385,10)
   let columnTexture = textureLoader.load('../works/assets/textures/golden_column_0.jpg');
-  columnTexture.crossOrigin = '';
-  loadPLYFile(scene, 'assets/objects/','golden_column',true,100, goldColumnPos, columnTexture );
+  loadOBJFile(scene, 'assets/objects/','golden_column',true,100, goldColumnPos, columnTexture );
 
   // Mountains
   let mountOne = createMountOne(new THREE.Vector3(-22,-15, 0), 11);
