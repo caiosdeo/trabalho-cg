@@ -357,7 +357,6 @@ function main(){
         else{ // * inertia for reverse movement (increments instead decrements)
           if(kartReverseSpeed < 0){
             kartReverseSpeed += kartSpeedRate*2
-            kartFloor.translateX(kartSpeed); // !ALERT: coloquei o próprio kartReverseSpeed aqui mas deu ruim, no entanto, funciona com o kartSpeedRate
           }
           else{
             kartReverseSpeed = 0;
