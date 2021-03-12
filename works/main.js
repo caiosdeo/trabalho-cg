@@ -222,14 +222,14 @@ function main(){
     poles[i] = createLightPole(scene, polesPosition[i], polesLight[i], polesRotate[i]);
   }
 
-  // Statue
+  // Trophy
   const statuePos = new THREE.Vector3(-325,275,0);
-  loadPLYFile(scene, 'assets/objects/','Thai_Female_Sandstone_V2.2',true,80, statuePos);
+  loadOBJFile(scene, 'assets/objects/','TrophyVase',true,80, statuePos);
 
   // Flower
-  const flowerPos = new THREE.Vector3(325,275,0);
-  let flowerTexture = textureLoader.load('../works/assets/textures/Flower_0.jpg');
-  loadOBJFile(scene, 'assets/objects/','Flower',true,150, flowerPos, flowerTexture);
+  // const flowerPos = new THREE.Vector3(325,275,0);
+  // let flowerTexture = textureLoader.load('../works/assets/textures/Flower_0.jpg');
+  // loadOBJFile(scene, 'assets/objects/','Flower',true,150, flowerPos, flowerTexture);
   // Column
   const goldColumn1Pos = new THREE.Vector3(77,-380,10)
   const goldColumn2Pos = new THREE.Vector3(77,-277,10)
