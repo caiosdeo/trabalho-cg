@@ -29,6 +29,39 @@ function loadPLYFile(scene, modelPath, modelName, visibility, desiredScale, desi
   }, onProgress, onError);
 }
 
+function loadOBJFile(scene, modelPath, modelName, visibility, desiredScale, desiredPosition, texture=null, objName=modelName){
+
+  let objLoader = new THREE.OBJLoader();
+
+  var mtlLoader = new THREE.MTLLoader();
+  mtlLoader.load( modelPath + modelName + '.mtl', function (materials) {
+
+    materials.preload();
+
+    objLoader
+      .setMaterials(materials)
+      .load(modelPath + modelName + '.obj', function(object){
+
+        object.position.copy(desiredPosition);
+
+        object.traverse(function (child) {  
+            if (child instanceof THREE.Mesh) {
+                child.material.map = texture;
+            }
+        });
+
+        object.name = objName;
+        object.visible = visibility;
+        object.castShadow = true;
+
+        object = normalizeAndRescale(object, desiredScale);
+        scene.add(object);
+      });
+
+  });
+
+}
+
 function normalizeAndRescale(obj, newScale){
   var scale = getMaxSize(obj); // Available in 'utils.js'
   obj.scale.set(newScale * (1.0/scale),
@@ -39,4 +72,8 @@ function normalizeAndRescale(obj, newScale){
 
 function onError(error) {console.error( error );};
 
-function onProgress ( ) {};
+function onProgress ( xhr ) {
+
+  console.log((xhr.loaded / xhr.total * 100) + '% loaded')
+
+};
