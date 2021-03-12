@@ -175,7 +175,7 @@ function main(){
 
   // Add Kart to the scene
   scene.add(kartFloor);
-  const initialPosition = new THREE.Vector3(0,-500, 1.5);
+  const initialPosition = new THREE.Vector3(0,-350, 1.5);
   kartFloor.position.copy(initialPosition);
 
   // Cockpit Camera Target
@@ -231,9 +231,30 @@ function main(){
   let flowerTexture = textureLoader.load('../works/assets/textures/Flower_0.jpg');
   loadOBJFile(scene, 'assets/objects/','Flower',true,150, flowerPos, flowerTexture);
   // Column
-  const goldColumnPos = new THREE.Vector3(250,-385,10)
+  const goldColumn1Pos = new THREE.Vector3(77,-380,10)
+  const goldColumn2Pos = new THREE.Vector3(77,-277,10)
   let columnTexture = textureLoader.load('../works/assets/textures/golden_column_0.jpg');
-  loadOBJFile(scene, 'assets/objects/','golden_column',true,100, goldColumnPos, columnTexture );
+  loadOBJFile(scene, 'assets/objects/','golden_column',true,80, goldColumn1Pos, columnTexture, 'coluna1');
+  loadOBJFile(scene, 'assets/objects/','golden_column',true,80, goldColumn2Pos, columnTexture, 'coluna2');
+  let col1;
+  let col2;
+  setTimeout(() => { 
+    col1 = scene.getObjectByName("coluna1", true);
+    col1.translateZ(22).rotateX(degreesToRadians(90));
+    col2 = scene.getObjectByName("coluna2", true);
+    col2.translateZ(22).rotateX(degreesToRadians(90));
+  }, 10000);
+
+  // create the finish line plane
+  const finishlinePos = new THREE.Vector3(80,-329,0.1)
+  let finishline = textureLoader.load('../works/assets/textures/finishline.png');
+  var finishGeometry = new THREE.PlaneGeometry(99, 10, 10, 10);
+  var finishMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:finishline});
+  var finishlinePlane = new THREE.Mesh(finishGeometry, finishMaterial);
+  finishlinePlane.receiveShadow = true;
+  scene.add(finishlinePlane);
+  finishlinePlane.rotateZ(degreesToRadians(90));
+  finishlinePlane.position.copy(finishlinePos);
 
   // Mountains
   let mountOne = createMountOne(new THREE.Vector3(-22,-15, 0), 11);
@@ -442,10 +463,12 @@ function main(){
       scene.remove(sandPlane);
       scene.remove(mountOne);
       scene.remove(mountTwo);
+      scene.remove(col1);
+      scene.remove(col2);
+      scene.remove(finishlinePlane);
       for (i = 0; i < polesPosition.length; i++){
         scene.remove(poles[i]);
       }
-      // scene.background = new THREE.Color( "rgb(20, 30, 110)" );;
     }
 
     if (activeCamera != 2){
@@ -453,10 +476,12 @@ function main(){
       scene.add(sandPlane);
       scene.add(mountOne);
       scene.add(mountTwo);
+      scene.add(col1);
+      scene.add(col2);
+      scene.add(finishlinePlane);
       for (i = 0; i < poles.length; i++){
         scene.add(poles[i]);
       }
-      // scene.background = new THREE.Color( "rgb(0, 0, 0)" );;
     }
     
     requestAnimationFrame(render);

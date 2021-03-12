@@ -29,7 +29,7 @@ function loadPLYFile(scene, modelPath, modelName, visibility, desiredScale, desi
   }, onProgress, onError);
 }
 
-function loadOBJFile(scene, modelPath, modelName, visibility, desiredScale, desiredPosition, texture=null){
+function loadOBJFile(scene, modelPath, modelName, visibility, desiredScale, desiredPosition, texture=null, objName=modelName){
 
   let objLoader = new THREE.OBJLoader();
 
@@ -50,7 +50,7 @@ function loadOBJFile(scene, modelPath, modelName, visibility, desiredScale, desi
             }
         });
 
-        object.name = modelName;
+        object.name = objName;
         object.visible = visibility;
         object.castShadow = true;
 
@@ -74,6 +74,6 @@ function onError(error) {console.error( error );};
 
 function onProgress ( xhr ) {
 
-  // console.log((xhr.loaded / xhr.total * 100) + '% loaded')
+  console.log((xhr.loaded / xhr.total * 100) + '% loaded')
 
 };
