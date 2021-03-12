@@ -135,7 +135,6 @@ function main(){
   let kartSpeedRate = kart.getSpeedRate();
   let kartSpeed = 0;
   let kartReverseSpeed = 0;
-  let kartReverseAngle = 0;
 
   // * behind 0, cockpit 1, inspect 2, heaven 3
   let activeCamera = 0;
