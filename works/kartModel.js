@@ -6,11 +6,10 @@ function createWheelAxis(){
     return wheelAxis;
 }
 
-function createWheel(wheelTexture){
+function createWheel(){
 
     //create a wheel
     let wheelGeometry = new THREE.CylinderGeometry(2.5, 2.5, 2.0, 25);
-    let wheelMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:wheelTexture});
     let wheelMaterial = new THREE.MeshPhongMaterial( {color:'rgb(10,10,10)'} );
     let wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
 
@@ -37,8 +36,6 @@ class kartModel {
 
         // create chassi
         let chassiGeometry = new THREE.BoxGeometry(1, 8, 3);
-        // let chassiTexture = textureLoader.load('../works/assets/textures/tire-mark-vectors.jpg');
-        // let chassiMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:chassiTexture});
         let chassiMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
         this.back = new THREE.Mesh(chassiGeometry, chassiMaterial);
         this.fore = new THREE.Mesh(chassiGeometry, chassiMaterial);
@@ -69,10 +66,9 @@ class kartModel {
         //create a wheelAxis
         this.frontAxis = createWheelAxis();
         this.frontAxis.position.set(0.0, 0.0, 0.0);
-        let wheelTexture = textureLoader.load('../works/assets/textures/tire.png');
-        this.frontWheelLeft = createWheel(wheelTexture);
+        this.frontWheelLeft = createWheel();
         this.frontWheelLeft.position.set(0.0, 5.5, 0.0);
-        this.frontWheelRight = createWheel(wheelTexture);
+        this.frontWheelRight = createWheel();
         this.frontWheelRight.position.set(0.0, -5.5, 0.0);
 
         // ? rear side
@@ -102,10 +98,11 @@ class kartModel {
         this.spoiler = new THREE.Mesh(spoilerGeometry, spoilerMaterial);
         this.spoiler.position.set(0, 0, 2.5);
 
-        //create a wheelAxis
+        // create a wheelAxis
         this.rearAxis = createWheelAxis();
         this.rearAxis.position.set(0.0, 0.0, 0.0);
 
+        // create wheels
         this.rearWheelLeft = createWheel();
         this.rearWheelRight = createWheel();
         this.rearWheelLeft.position.set(0.0, 5.5, 0.0);
