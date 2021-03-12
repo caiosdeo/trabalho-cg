@@ -225,7 +225,11 @@ function main(){
   // const trophyPos = new THREE.Vector3(-325,275,0);
   // loadOBJFile(scene, 'assets/objects/','TrophyVase',true,80, trophyPos);
 
-  // Column
+   // Plane
+  // const planePos = new THREE.Vector3(-325,275,0);
+  // loadOBJFile(scene, 'assets/objects/','Plane',true,80, planePos);
+
+  // Columns
   const goldColumn1Pos = new THREE.Vector3(77,-380,10)
   const goldColumn2Pos = new THREE.Vector3(77,-277,10)
   let columnTexture = textureLoader.load('../works/assets/textures/golden_column_0.jpg');
@@ -250,6 +254,46 @@ function main(){
   scene.add(finishlinePlane);
   finishlinePlane.rotateZ(degreesToRadians(90));
   finishlinePlane.position.copy(finishlinePos);
+
+  // testing planes
+  // Chassi texture
+  const finishline1Pos = new THREE.Vector3(100,-329,0.1)
+  let finishline1 = textureLoader.load('../works/assets/textures/Flash_and_circle.svg');
+  var finishGeometry1 = new THREE.PlaneGeometry(10, 10, 10, 10);
+  var finishMaterial1 = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:finishline1});
+  var finishlinePlane1 = new THREE.Mesh(finishGeometry1, finishMaterial1);
+  finishlinePlane1.receiveShadow = true;
+  scene.add(finishlinePlane1);
+  finishlinePlane1.rotateZ(degreesToRadians(90));
+  finishlinePlane1.position.copy(finishline1Pos);
+
+  // wing texture
+  const finishline2Pos = new THREE.Vector3(120,-329,0.1)
+  let finishline2 = textureLoader.load('../works/assets/textures/wing.jpg');
+  // finishline2.wrapS = THREE.RepeatWrapping;
+  // finishline2.wrapT = THREE.RepeatWrapping;
+  // finishline2.repeat.set(1,2);
+  var finishGeometry2 = new THREE.PlaneGeometry(99, 10, 10, 10);
+  var finishMaterial2 = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:finishline2});
+  var finishlinePlane2 = new THREE.Mesh(finishGeometry2, finishMaterial2);
+  finishlinePlane2.receiveShadow = true;
+  scene.add(finishlinePlane2);
+  finishlinePlane2.rotateZ(degreesToRadians(90));
+  finishlinePlane2.position.copy(finishline2Pos);
+
+  // wheels texture
+  const finishline3Pos = new THREE.Vector3(140,-329,0.1)
+  let finishline3 = textureLoader.load('../works/assets/textures/tire.png');
+  finishline3.wrapS = THREE.RepeatWrapping;
+  finishline3.wrapT = THREE.RepeatWrapping;
+  finishline3.repeat.set(4,1);
+  var finishGeometry3 = new THREE.PlaneGeometry(99, 10, 10, 10);
+  var finishMaterial3 = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:finishline3});
+  var finishlinePlane3 = new THREE.Mesh(finishGeometry3, finishMaterial3);
+  finishlinePlane1.receiveShadow = true;
+  scene.add(finishlinePlane3);
+  finishlinePlane3.rotateZ(degreesToRadians(90));
+  finishlinePlane3.position.copy(finishline3Pos);
 
   // Mountains
   let mountOne = createMountOne(new THREE.Vector3(-22,-15, 0), 11);
