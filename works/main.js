@@ -135,7 +135,7 @@ function main(){
   let kartSpinCounter = 0;
 
   // * behind 0, cockpit 1, inspect 2, heaven 3
-  let activeCamera = 1;
+  let activeCamera = 0;
 
   let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 10000); // Init camera in this position
   let cameraLight = new THREE.SpotLight("rgb(255,255,255)");
@@ -172,7 +172,7 @@ function main(){
 
   // Add Kart to the scene
   scene.add(kartFloor);
-  const initialPosition = new THREE.Vector3(-390,255,0);//new THREE.Vector3(0,-350, 1.5);
+  const initialPosition = new THREE.Vector3(0,-350, 1.5);
   kartFloor.position.copy(initialPosition);
 
   // Cockpit Camera Target
@@ -220,7 +220,7 @@ function main(){
   }
 
    // Plane
-  const planePos = new THREE.Vector3(-325,275,0);
+  const planePos = new THREE.Vector3(-325,275,-5);
   loadOBJFile(scene, 'assets/objects/','Plane',true,80, planePos);
   let planeObj;
 
@@ -228,17 +228,18 @@ function main(){
   const goldColumn1Pos = new THREE.Vector3(77,-380,10)
   const goldColumn2Pos = new THREE.Vector3(77,-277,10)
   let columnTexture = textureLoader.load('../works/assets/textures/golden_column_0.jpg');
-  loadOBJFile(scene, 'assets/objects/','golden_column',true,80, goldColumn1Pos, columnTexture, 'coluna1');
-  loadOBJFile(scene, 'assets/objects/','golden_column',true,80, goldColumn2Pos, columnTexture, 'coluna2');
+  loadOBJFile(scene, 'assets/objects/','golden_column',true,50, goldColumn1Pos, columnTexture, 'coluna1');
+  loadOBJFile(scene, 'assets/objects/','golden_column',true,50, goldColumn2Pos, columnTexture, 'coluna2');
   let col1;
   let col2;
   setTimeout(() => { 
     col1 = scene.getObjectByName("coluna1", true);
-    col1.translateZ(22).rotateX(degreesToRadians(90));
+    col1.translateZ(14).rotateX(degreesToRadians(90));
     col2 = scene.getObjectByName("coluna2", true);
-    col2.translateZ(22).rotateX(degreesToRadians(90));
+    col2.translateZ(14).rotateX(degreesToRadians(90));
     planeObj = scene.getObjectByName("Plane",true);
-    planeObj.rotateZ(degreesToRadians(90));
+    planeObj.translateZ(20).translateY(-400).rotateX(degreesToRadians(90));
+    console.log(col1);
   }, 10000);
 
   // create the finish line plane
