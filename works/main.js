@@ -1,4 +1,21 @@
-function behindKartCamera(scene, camera, light, kart, kartX, kartY) {
+function lightFollowCamera(scene, camera, light, target){
+
+  let cameraPos = new THREE.Vector3();
+
+  camera.getWorldPosition(cameraPos)
+
+  light.position.copy(cameraPos);
+  light.decay = 2;
+  light.penumbra = 0.05;
+  light.name = "Camera Light"
+
+  light.target = target;
+  scene.add( light.target );  
+  light.target.updateMatrixWorld();
+
+}
+
+function behindKartCamera(camera, kart, kartX, kartY) {
   
   var upVec = new THREE.Vector3(0, 0, 1);
   let lookAt = new THREE.Vector3(kartX, kartY, 1.5);
@@ -11,20 +28,10 @@ function behindKartCamera(scene, camera, light, kart, kartX, kartY) {
 
   camera.up = upVec;
   camera.lookAt(lookAt);
-
-  // Camera Light
-  light.position.copy(camera.position);
-  light.decay = 2;
-  light.penumbra = 0.05;
-  light.name = "Camera Light"
-
-  light.target = kart;
-  scene.add( light.target );  
-  light.target.updateMatrixWorld();
   
 }
 
-function cockpitCamera(scene, camera, light, wing, wingX, wingY) {
+function cockpitCamera(camera, wing, wingX, wingY) {
 
   var upVec = new THREE.Vector3(0, 0, 1);
   let lookAt = new THREE.Vector3(wingX, wingY, 4);
@@ -37,16 +44,6 @@ function cockpitCamera(scene, camera, light, wing, wingX, wingY) {
 
   camera.up = upVec;
   camera.lookAt(lookAt);
-
-  // Camera Light
-  light.position.copy(camera.position);
-  light.decay = 2;
-  light.penumbra = 0.05;
-  light.name = "Camera Light"
-
-  light.target = wing;
-  scene.add( light.target );  
-  light.target.updateMatrixWorld();
   
 }
 
@@ -428,8 +425,8 @@ function main(){
 
     frontWing.getWorldPosition( cockpitTarget );
     targetObject.position.copy(cockpitTarget);
-    if(activeCamera == 0){behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);}
-    if(activeCamera == 1){cockpitCamera(scene, camera, cameraLight, targetObject, cockpitTarget.x, cockpitTarget.y)}
+    if(activeCamera == 0){behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);}
+    if(activeCamera == 1){cockpitCamera(camera, targetObject, cockpitTarget.x, cockpitTarget.y)}
     if(activeCamera == 3){heavenCamera(camera)}
   }
 
@@ -437,10 +434,10 @@ function main(){
   function updateCamera(){
     switch (activeCamera) {
       case 0:
-        behindKartCamera(scene, camera, cameraLight, kartFloor, kartFloor.position.x, kartFloor.position.y);
+        behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
         break;
       case 1:
-        cockpitCamera(scene, camera, cameraLight, targetObject, cockpitTarget.x, cockpitTarget.y);
+        cockpitCamera(camera, targetObject, cockpitTarget.x, cockpitTarget.y);
         break;
       case 2:
         inspectCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
@@ -484,6 +481,16 @@ function main(){
       }
     }
     
+    if(activeCamera == 0){
+
+      behindKartCamera(camera, kartFloor, cockpitTarget.x, cockpitTarget.y)
+      lightFollowCamera(scene, camera, cameraLight, kartFloor);
+    }
+    if(activeCamera == 1){
+      cockpitCamera(camera, targetObject, cockpitTarget.x, cockpitTarget.y)
+      lightFollowCamera(scene, camera, cameraLight, targetObject);
+    }
+
     requestAnimationFrame(render);
     keyboardUpdate();
     renderer.render(scene, camera) // Render scene
