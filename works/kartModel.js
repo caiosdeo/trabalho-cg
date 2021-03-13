@@ -331,11 +331,11 @@ class kartModel {
         this.rearWheelRight.matrix.identity();
 
         this.frontWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
-        this.frontWheelLeft.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle))); 
-        // this.frontWheelLeft.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle))); 
+        this.frontWheelLeft.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
+        this.frontWheelRight.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
+        this.frontWheelLeft.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle)));  
         this.frontWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
         this.frontWheelRight.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle)));
-        // this.frontWheelRight.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
         this.rearWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
         this.rearWheelLeft.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle))); 
         this.rearWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
