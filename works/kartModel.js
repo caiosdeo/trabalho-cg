@@ -304,6 +304,36 @@ class kartModel {
     }
 
     /**
+     * Functions to spin the wheels when speed and reverse speed != 0
+     */
+    spinWheels(kartSpinCounter){
+
+        let spinAngle = kartSpinCounter*(1+Math.abs(this.frontWheelsAngle));
+
+        this.frontWheelLeft.matrixAutoUpdate = false;
+        this.frontWheelRight.matrixAutoUpdate = false;
+        this.rearWheelLeft.matrixAutoUpdate = false;
+        this.rearWheelRight.matrixAutoUpdate = false;
+
+        var mat4 = new THREE.Matrix4();
+
+        this.frontWheelLeft.matrix.identity();
+        this.frontWheelRight.matrix.identity();
+        this.rearWheelLeft.matrix.identity();
+        this.rearWheelRight.matrix.identity();
+
+        this.frontWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
+        this.frontWheelLeft.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle))); 
+        this.frontWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
+        this.frontWheelRight.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle)));
+        this.rearWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
+        this.rearWheelLeft.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle))); 
+        this.rearWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
+        this.rearWheelRight.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle)));
+
+    }
+
+    /**
      * Função para montar o kart com as peças criadas no construtor
      */
     assembleKart() { 

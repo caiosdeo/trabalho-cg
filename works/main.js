@@ -135,6 +135,7 @@ function main(){
   let kartSpeedRate = kart.getSpeedRate();
   let kartSpeed = 0;
   let kartReverseSpeed = 0;
+  let kartSpinCounter = 0;
 
   // * behind 0, cockpit 1, inspect 2, heaven 3
   let activeCamera = 0;
@@ -403,11 +404,18 @@ function main(){
         }
       }
 
-      // Correct speed values
-      if(kartSpeed > 0)
+      // Correct speed values and the kartSpinCounter
+      if(kartSpeed > 0){
         kartReverseSpeed = 0;
-      if(kartReverseSpeed < 0)
+        kartSpinCounter += Math.floor(kartSpeed*3); 
+      }
+      if(kartReverseSpeed < 0){
         kartSpeed = 0;
+        kartSpinCounter -= Math.floor(kartReverseSpeed*1.5); 
+      }
+
+      // Spins the wheels
+      kart.spinWheels(kartSpinCounter);
 
     }
 
