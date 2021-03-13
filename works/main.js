@@ -2,7 +2,7 @@ function lightFollowCamera(scene, camera, light, target){
 
   let cameraPos = new THREE.Vector3();
 
-  camera.getWorldPosition(cameraPos)
+  camera.getWorldPosition(cameraPos);
 
   light.position.copy(cameraPos);
   light.decay = 2;
@@ -135,7 +135,7 @@ function main(){
   let kartSpinCounter = 0;
 
   // * behind 0, cockpit 1, inspect 2, heaven 3
-  let activeCamera = 0;
+  let activeCamera = 1;
 
   let camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 10000); // Init camera in this position
   let cameraLight = new THREE.SpotLight("rgb(255,255,255)");
@@ -307,7 +307,7 @@ function main(){
     // Change camera
     if ( keyboard.down("space") ){ 
 
-      if (activeCamera < 3){
+      if (activeCamera < 2){
         activeCamera++;
       }else{
         activeCamera = 0;
@@ -490,6 +490,7 @@ function main(){
     if(activeCamera == 2){
       trackballControls.target = kartFloor.position;
       trackballControls.update(); // Enable mouse movements
+      lightFollowCamera(scene, camera, cameraLight, kartFloor);
       removeScenario();
     } else {
       addScenario();

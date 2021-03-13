@@ -17,8 +17,8 @@ blueWingTexture.wrapT = THREE.RepeatWrapping;
 blueWingTexture.repeat.set(7,4.3);
 // Number Texture
 let numberTexture = textureLoader.load('../works/assets/textures/number.png');
-let numberGeometry = new THREE.PlaneGeometry(4,3,0);
-let numberMaterial = new THREE.MeshPhongMaterial({ color:'rgb(150,0,0)',map:numberTexture });
+let numberGeometry = new THREE.CircleGeometry(1.5,25);
+let numberMaterial = new THREE.MeshPhongMaterial({map:numberTexture, side: THREE.DoubleSide});
 // Flash texture
 let flashTexture = textureLoader.load('../works/assets/textures/Flash_and_circle.svg');
 let flashGeometry = new THREE.PlaneGeometry(2,2,0);
@@ -168,7 +168,7 @@ class kartModel {
         // Left
         this.adhesiveLeft = new THREE.Mesh(numberGeometry,numberMaterial);
         this.adhesiveLeft.position.set(0,.51,0);
-        this.adhesiveLeft.rotateX(degreesToRadians(90)); // !VERIFICAR!!!
+        this.adhesiveLeft.rotateX(degreesToRadians(270));
         // Back
         this.adhesiveBack = new THREE.Mesh(flashGeometry,flashMaterial);
         this.adhesiveBack.position.set(-3.1,0,-.48);
