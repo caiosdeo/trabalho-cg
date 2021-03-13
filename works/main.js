@@ -132,7 +132,7 @@ function main(){
   let kartSpeedRate = kart.getSpeedRate();
   let kartSpeed = 0;
   let kartReverseSpeed = 0;
-  let kartReverseAngle = 0;
+  let kartSpinCounter = 0;
 
   // * behind 0, cockpit 1, inspect 2, heaven 3
   let activeCamera = 0;
@@ -219,15 +219,15 @@ function main(){
     poles[i] = createLightPole(scene, polesPosition[i], polesLight[i], polesRotate[i]);
   }
 
-  // Statue
-  const statuePos = new THREE.Vector3(-325,275,0);
-  loadPLYFile(scene, 'assets/objects/','Thai_Female_Sandstone_V2.2',true,80, statuePos);
+  // Trophy
+  // const trophyPos = new THREE.Vector3(-325,275,0);
+  // loadOBJFile(scene, 'assets/objects/','TrophyVase',true,80, trophyPos);
 
-  // Flower
-  const flowerPos = new THREE.Vector3(325,275,0);
-  let flowerTexture = textureLoader.load('../works/assets/textures/Flower_0.jpg');
-  loadOBJFile(scene, 'assets/objects/','Flower',true,150, flowerPos, flowerTexture);
-  // Column
+   // Plane
+  // const planePos = new THREE.Vector3(-325,275,0);
+  // loadOBJFile(scene, 'assets/objects/','Plane',true,80, planePos);
+
+  // Columns
   const goldColumn1Pos = new THREE.Vector3(77,-380,10)
   const goldColumn2Pos = new THREE.Vector3(77,-277,10)
   let columnTexture = textureLoader.load('../works/assets/textures/golden_column_0.jpg');
@@ -343,6 +343,10 @@ function main(){
         }
       }
 
+      // Spins the wheels
+      if(kartSpeed + kartReverseSpeed != 0)
+        kart.spinWheels(kartSpinCounter);
+
       if (keyboard.pressed("right")){ // * Rodas do kart pra direita
         kart.decrementFrontWheelsAngle(3);
         if(kartSpeed > 0){
@@ -373,7 +377,6 @@ function main(){
         else{ // * inertia for reverse movement (increments instead decrements)
           if(kartReverseSpeed < 0){
             kartReverseSpeed += kartSpeedRate*2
-            kartFloor.translateX(kartSpeed); // !ALERT: coloquei o próprio kartReverseSpeed aqui mas deu ruim, no entanto, funciona com o kartSpeedRate
           }
           else{
             kartReverseSpeed = 0;
@@ -402,11 +405,15 @@ function main(){
         }
       }
 
-      // Correct speed values
-      if(kartSpeed > 0)
+      // Correct speed values and the kartSpinCounter
+      if(kartSpeed > 0){
         kartReverseSpeed = 0;
-      if(kartReverseSpeed < 0)
+        kartSpinCounter += 1 + Math.floor(kartSpeed*3); 
+      }
+      if(kartReverseSpeed < 0){
         kartSpeed = 0;
+        kartSpinCounter += Math.floor(kartReverseSpeed*2); 
+      }
 
     }
 
