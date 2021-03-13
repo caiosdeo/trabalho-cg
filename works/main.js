@@ -346,6 +346,10 @@ function main(){
         }
       }
 
+      // Spins the wheels
+      if(kartSpeed + kartReverseSpeed != 0)
+        kart.spinWheels(kartSpinCounter);
+
       if (keyboard.pressed("right")){ // * Rodas do kart pra direita
         kart.decrementFrontWheelsAngle(3);
         if(kartSpeed > 0){
@@ -413,10 +417,6 @@ function main(){
         kartSpeed = 0;
         kartSpinCounter += Math.floor(kartReverseSpeed*2); 
       }
-
-      // Spins the wheels
-      if(kartSpeed + kartReverseSpeed != 0)
-        kart.spinWheels(kartSpinCounter);
 
     }
 
