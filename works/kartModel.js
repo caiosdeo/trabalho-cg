@@ -1,3 +1,13 @@
+// Global texture Loader and textures
+const textureLoader = new THREE.TextureLoader();
+let orangeWingTexture = textureLoader.load('../works/assets/textures/orangeWing.jpg');
+let wheelTexture = textureLoader.load('../works/assets/textures/tire.png');
+let blueWingTexture = textureLoader.load('../works/assets/textures/blueWing.jpg');
+
+// Global materials
+blueWingMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:blueWingTexture});
+orangeWingMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:orangeWingTexture}); 
+
 function createWheelAxis(){
     let wheelAxisGeometry = new THREE.CylinderGeometry(0.5, 0.5, 10.5, 25);
     let wheelAxisMaterial = new THREE.MeshPhongMaterial( {color:'rgb(50,50,50)'} );
@@ -10,7 +20,8 @@ function createWheel(){
 
     //create a wheel
     let wheelGeometry = new THREE.CylinderGeometry(2.5, 2.5, 2.0, 25);
-    let wheelMaterial = new THREE.MeshPhongMaterial( {color:'rgb(10,10,10)'} );
+    let wheelMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:wheelTexture});
+    // let wheelMaterial = new THREE.MeshPhongMaterial( {color:'rgb(10,10,10)'} );
     let wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
 
     return wheel;
@@ -53,13 +64,15 @@ class kartModel {
         // ? front side
         // create kart's front
         let frontGeometry = new THREE.BoxGeometry(8, 2, 3);
-        let frontMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)' });
+        let frontMaterial = orangeWingMaterial;
+        // let frontMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)' });
         this.front = new THREE.Mesh(frontGeometry, frontMaterial);
         this.front.position.set(9.0, 0.0, 1.0);
 
         //create a wing
         let frontWingGeometry = new THREE.BoxGeometry(2, 8, 3);
-        let frontWingMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
+        let frontWingMaterial = orangeWingMaterial;
+        // let frontWingMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
         this.frontWing = new THREE.Mesh(frontWingGeometry, frontWingMaterial);
         this.frontWing.position.set(5.0, 0.0, 0.0);
 
@@ -74,19 +87,22 @@ class kartModel {
         // ? rear side
         // create a cube
         let rearGeometry = new THREE.BoxGeometry(6, 2, 3);
-        let rearMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)' });
+        let rearMaterial = orangeWingMaterial;
+        // let rearMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)' });
         this.rear = new THREE.Mesh(rearGeometry, rearMaterial);
         this.rear.position.set(-8, 0.0, 1.0);
 
         //create a wing
         let rearWingGeometry = new THREE.BoxGeometry(2, 8, 1.5);
-        let rearWingMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)' });
+        let rearWingMaterial = orangeWingMaterial;
+        // let rearWingMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)' });
         this.rearWing = new THREE.Mesh(rearWingGeometry, rearWingMaterial);
         this.rearWing.position.set(-2.0, 0.0, 1.5);
 
         //create a wing
         let spoilerSupportGeometry = new THREE.BoxGeometry(2, 0.3, 1.5);
-        let spoilerSupportMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
+        let spoilerSupportMaterial = orangeWingMaterial;
+        // let spoilerSupportMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
         this.spoilerSupportRight = new THREE.Mesh(spoilerSupportGeometry, spoilerSupportMaterial);
         this.spoilerSupportLeft = new THREE.Mesh(spoilerSupportGeometry, spoilerSupportMaterial);
         // position the cube
@@ -94,7 +110,8 @@ class kartModel {
         this.spoilerSupportLeft.position.set(0, 1.5, 1.5);
 
         let spoilerGeometry = new THREE.BoxGeometry(3, 10, 0.5);
-        let spoilerMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
+        let spoilerMaterial = orangeWingMaterial;
+        // let spoilerMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
         this.spoiler = new THREE.Mesh(spoilerGeometry, spoilerMaterial);
         this.spoiler.position.set(0, 0, 2.5);
 
@@ -111,13 +128,15 @@ class kartModel {
         // ? seat
         // create base floor
         let seatGeometry = new THREE.BoxGeometry(5, 5, 0.5);
-        let seatMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(255,255,255)' });
+        let seatMaterial = blueWingMaterial;
+        // let seatMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(255,255,255)' });
         this.seat = new THREE.Mesh(seatGeometry, seatMaterial);
         this.seat.position.set(0.0, 0.0, 0.75);
 
         // create seat back
         let seatBackGeometry = new THREE.BoxGeometry(0.5, 5, 4);
-        let seatBackMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(125,125,125)' });
+        let seatBackMaterial = blueWingMaterial;
+        // let seatBackMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(125,125,125)' });
         this.seatBack = new THREE.Mesh(seatBackGeometry, seatBackMaterial);
         this.seatBack.position.set(-2.5, 0, 1.75);
 

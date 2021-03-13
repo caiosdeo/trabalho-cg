@@ -281,20 +281,6 @@ function main(){
   finishlinePlane2.rotateZ(degreesToRadians(90));
   finishlinePlane2.position.copy(finishline2Pos);
 
-  // wheels texture
-  const finishline3Pos = new THREE.Vector3(140,-329,0.1)
-  let finishline3 = textureLoader.load('../works/assets/textures/tire.png');
-  finishline3.wrapS = THREE.RepeatWrapping;
-  finishline3.wrapT = THREE.RepeatWrapping;
-  finishline3.repeat.set(4,1);
-  var finishGeometry3 = new THREE.PlaneGeometry(99, 10, 10, 10);
-  var finishMaterial3 = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:finishline3});
-  var finishlinePlane3 = new THREE.Mesh(finishGeometry3, finishMaterial3);
-  finishlinePlane1.receiveShadow = true;
-  scene.add(finishlinePlane3);
-  finishlinePlane3.rotateZ(degreesToRadians(90));
-  finishlinePlane3.position.copy(finishline3Pos);
-
   // Mountains
   let mountOne = createMountOne(new THREE.Vector3(-22,-15, 0), 11);
   scene.add(mountOne);
