@@ -175,7 +175,7 @@ function main(){
 
   // Add Kart to the scene
   scene.add(kartFloor);
-  const initialPosition = new THREE.Vector3(0,-350, 1.5);
+  const initialPosition = new THREE.Vector3(-390,255,0);//new THREE.Vector3(0,-350, 1.5);
   kartFloor.position.copy(initialPosition);
 
   // Cockpit Camera Target
@@ -222,13 +222,10 @@ function main(){
     poles[i] = createLightPole(scene, polesPosition[i], polesLight[i], polesRotate[i]);
   }
 
-  // Trophy
-  // const trophyPos = new THREE.Vector3(-325,275,0);
-  // loadOBJFile(scene, 'assets/objects/','TrophyVase',true,80, trophyPos);
-
    // Plane
-  // const planePos = new THREE.Vector3(-325,275,0);
-  // loadOBJFile(scene, 'assets/objects/','Plane',true,80, planePos);
+  const planePos = new THREE.Vector3(-325,275,0);
+  loadOBJFile(scene, 'assets/objects/','Plane',true,80, planePos);
+  let planeObj;
 
   // Columns
   const goldColumn1Pos = new THREE.Vector3(77,-380,10)
@@ -243,6 +240,8 @@ function main(){
     col1.translateZ(22).rotateX(degreesToRadians(90));
     col2 = scene.getObjectByName("coluna2", true);
     col2.translateZ(22).rotateX(degreesToRadians(90));
+    planeObj = scene.getObjectByName("Plane",true);
+    planeObj.rotateZ(degreesToRadians(90));
   }, 10000);
 
   // create the finish line plane
