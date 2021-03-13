@@ -1,8 +1,24 @@
 // Global texture Loader and textures
 const textureLoader = new THREE.TextureLoader();
+// Orange Wing Texture
 let orangeWingTexture = textureLoader.load('../works/assets/textures/orangeWing.jpg');
-let wheelTexture = textureLoader.load('../works/assets/textures/tire.png');
+orangeWingTexture.wrapS = THREE.RepeatWrapping;
+orangeWingTexture.wrapT = THREE.RepeatWrapping;
+orangeWingTexture.repeat.set(1,30);
+// Rubber Wheel Texture
+let wheelTexture = textureLoader.load('../works/assets/textures/tire.jpeg');
+wheelTexture.wrapS = THREE.RepeatWrapping;
+wheelTexture.wrapT = THREE.RepeatWrapping;
+wheelTexture.repeat.set(4,1);
+// Blue Wing Texture
 let blueWingTexture = textureLoader.load('../works/assets/textures/blueWing.jpg');
+blueWingTexture.wrapS = THREE.RepeatWrapping;
+blueWingTexture.wrapT = THREE.RepeatWrapping;
+blueWingTexture.repeat.set(7,4.3);
+// Number Texture
+let numberTexture = textureLoader.load('../works/assets/textures/number.png');
+let numberGeometry = new THREE.PlaneGeometry(4,3,0);
+let numberMaterial = new THREE.MeshPhongMaterial({ color:'rgb(150,0,0)',map:numberTexture });
 
 // Global materials
 blueWingMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:blueWingTexture});
@@ -139,6 +155,16 @@ class kartModel {
         // let seatBackMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(125,125,125)' });
         this.seatBack = new THREE.Mesh(seatBackGeometry, seatBackMaterial);
         this.seatBack.position.set(-2.5, 0, 1.75);
+
+        // create side adhesives
+        // Right
+        this.adhesiveRight = new THREE.Mesh(numberGeometry,numberMaterial);
+        this.adhesiveRight.position.set(0,-.51,0);
+        this.adhesiveRight.rotateX(degreesToRadians(90));
+        // Left
+        this.adhesiveLeft = new THREE.Mesh(numberGeometry,numberMaterial);
+        this.adhesiveLeft.position.set(0,.51,0);
+        this.adhesiveLeft.rotateX(degreesToRadians(90));
 
         this.floor.castShadow = true;
         this.back.castShadow = true;
@@ -304,6 +330,9 @@ class kartModel {
 
         this.floor.add(this.seat);
         this.seat.add(this.seatBack);
+
+        this.right.add(this.adhesiveRight);
+        this.left.add(this.adhesiveLeft);
 
         return this.floor;
     

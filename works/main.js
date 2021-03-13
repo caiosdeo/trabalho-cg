@@ -255,32 +255,6 @@ function main(){
   finishlinePlane.rotateZ(degreesToRadians(90));
   finishlinePlane.position.copy(finishlinePos);
 
-  // testing planes
-  // Chassi texture
-  const finishline1Pos = new THREE.Vector3(100,-329,0.1)
-  let finishline1 = textureLoader.load('../works/assets/textures/Flash_and_circle.svg');
-  var finishGeometry1 = new THREE.PlaneGeometry(10, 10, 10, 10);
-  var finishMaterial1 = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:finishline1});
-  var finishlinePlane1 = new THREE.Mesh(finishGeometry1, finishMaterial1);
-  finishlinePlane1.receiveShadow = true;
-  scene.add(finishlinePlane1);
-  finishlinePlane1.rotateZ(degreesToRadians(90));
-  finishlinePlane1.position.copy(finishline1Pos);
-
-  // wing texture
-  const finishline2Pos = new THREE.Vector3(120,-329,0.1)
-  let finishline2 = textureLoader.load('../works/assets/textures/wing.jpg');
-  // finishline2.wrapS = THREE.RepeatWrapping;
-  // finishline2.wrapT = THREE.RepeatWrapping;
-  // finishline2.repeat.set(1,2);
-  var finishGeometry2 = new THREE.PlaneGeometry(99, 10, 10, 10);
-  var finishMaterial2 = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:finishline2});
-  var finishlinePlane2 = new THREE.Mesh(finishGeometry2, finishMaterial2);
-  finishlinePlane2.receiveShadow = true;
-  scene.add(finishlinePlane2);
-  finishlinePlane2.rotateZ(degreesToRadians(90));
-  finishlinePlane2.position.copy(finishline2Pos);
-
   // Mountains
   let mountOne = createMountOne(new THREE.Vector3(-22,-15, 0), 11);
   scene.add(mountOne);
