@@ -411,7 +411,7 @@ function main(){
       }
       if(kartReverseSpeed < 0){
         kartSpeed = 0;
-        kartSpinCounter += Math.floor(kartReverseSpeed*1.5); 
+        kartSpinCounter += Math.floor(kartReverseSpeed*2); 
       }
 
       // Spins the wheels
