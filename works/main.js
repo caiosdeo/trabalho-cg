@@ -407,15 +407,16 @@ function main(){
       // Correct speed values and the kartSpinCounter
       if(kartSpeed > 0){
         kartReverseSpeed = 0;
-        kartSpinCounter += Math.floor(kartSpeed*3); 
+        kartSpinCounter += 1 + Math.floor(kartSpeed*3); 
       }
       if(kartReverseSpeed < 0){
         kartSpeed = 0;
-        kartSpinCounter -= Math.floor(kartReverseSpeed*1.5); 
+        kartSpinCounter += Math.floor(kartReverseSpeed*1.5); 
       }
 
       // Spins the wheels
-      kart.spinWheels(kartSpinCounter);
+      if(kartSpeed + kartReverseSpeed != 0)
+        kart.spinWheels(kartSpinCounter);
 
     }
 

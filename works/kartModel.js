@@ -19,6 +19,10 @@ blueWingTexture.repeat.set(7,4.3);
 let numberTexture = textureLoader.load('../works/assets/textures/number.png');
 let numberGeometry = new THREE.PlaneGeometry(4,3,0);
 let numberMaterial = new THREE.MeshPhongMaterial({ color:'rgb(150,0,0)',map:numberTexture });
+// Flash texture
+let flashTexture = textureLoader.load('../works/assets/textures/Flash_and_circle.svg');
+let flashGeometry = new THREE.PlaneGeometry(2,2,0);
+let flashMaterial = new THREE.MeshPhongMaterial({ color:'rgb(255,154,0)',map:flashTexture });
 
 // Global materials
 blueWingMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:blueWingTexture});
@@ -156,7 +160,7 @@ class kartModel {
         this.seatBack = new THREE.Mesh(seatBackGeometry, seatBackMaterial);
         this.seatBack.position.set(-2.5, 0, 1.75);
 
-        // create side adhesives
+        // create adhesives
         // Right
         this.adhesiveRight = new THREE.Mesh(numberGeometry,numberMaterial);
         this.adhesiveRight.position.set(0,-.51,0);
@@ -164,7 +168,12 @@ class kartModel {
         // Left
         this.adhesiveLeft = new THREE.Mesh(numberGeometry,numberMaterial);
         this.adhesiveLeft.position.set(0,.51,0);
-        this.adhesiveLeft.rotateX(degreesToRadians(90));
+        this.adhesiveLeft.rotateX(degreesToRadians(90)); // !VERIFICAR!!!
+        // Back
+        this.adhesiveBack = new THREE.Mesh(flashGeometry,flashMaterial);
+        this.adhesiveBack.position.set(-3.1,0,-.48);
+        this.adhesiveBack.rotateY(degreesToRadians(270));
+        this.adhesiveBack.rotateZ(degreesToRadians(270));
 
         this.floor.castShadow = true;
         this.back.castShadow = true;
@@ -240,7 +249,6 @@ class kartModel {
         if(this.frontWheelsAngle - angle > -25){
 
             this.frontWheelsAngle -= angle;
-
             this.frontWheelLeft.matrixAutoUpdate = false;
             this.frontWheelRight.matrixAutoUpdate = false;
 
@@ -363,6 +371,7 @@ class kartModel {
 
         this.right.add(this.adhesiveRight);
         this.left.add(this.adhesiveLeft);
+        this.rear.add(this.adhesiveBack);
 
         return this.floor;
     
