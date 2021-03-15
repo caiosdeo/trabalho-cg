@@ -353,7 +353,10 @@ function main(){
       if(kartSpeed + kartReverseSpeed != 0)
         kart.spinWheels(kartSpinCounter);
 
-      if (keyboard.pressed("right")){ // * Rodas do kart pra direita
+      // The functions below are the same as the functions above
+      // The parameters were just adapted for the kartReverSpeed and the reverse movements
+
+      if (keyboard.pressed("right")){ // * Wheels to right
         kart.decrementFrontWheelsAngle(3);
         if(kartSpeed > 0){
           kartFloor.rotateOnAxis(new THREE.Vector3(0,0,1), -rotateAngle);
@@ -362,7 +365,7 @@ function main(){
       }else{
         kart.correctFrontWheelsLeft();
       }
-      if (keyboard.pressed("left")){ // * Rodas do kart pra esquerda
+      if (keyboard.pressed("left")){ // * Wheels to left
         kart.incrementFrontWheelsAngle(3);
         if(kartSpeed > 0){
           kartFloor.rotateOnAxis(new THREE.Vector3(0,0,1), rotateAngle);
