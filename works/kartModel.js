@@ -40,8 +40,8 @@ function createWheel(){
 
     //create a wheel
     let wheelGeometry = new THREE.CylinderGeometry(2.5, 2.5, 2.0, 25);
+    // Maps the wheels material previously defined
     let wheelMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:wheelTexture});
-    // let wheelMaterial = new THREE.MeshPhongMaterial( {color:'rgb(10,10,10)'} );
     let wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
 
     return wheel;
@@ -84,15 +84,15 @@ class kartModel {
         // ? front side
         // create kart's front
         let frontGeometry = new THREE.BoxGeometry(8, 2, 3);
-        let frontMaterial = orangeWingMaterial;
-        // let frontMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)' });
+        // Sets orangeWingMaterial to kart's front
+        let frontMaterial = orangeWingMaterial; 
         this.front = new THREE.Mesh(frontGeometry, frontMaterial);
         this.front.position.set(9.0, 0.0, 1.0);
 
         //create a wing
         let frontWingGeometry = new THREE.BoxGeometry(2, 8, 3);
         let frontWingMaterial = orangeWingMaterial;
-        // let frontWingMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
+        // Sets orangeWingMaterial to kart's wing
         this.frontWing = new THREE.Mesh(frontWingGeometry, frontWingMaterial);
         this.frontWing.position.set(5.0, 0.0, 0.0);
 
@@ -107,31 +107,29 @@ class kartModel {
         // ? rear side
         // create a cube
         let rearGeometry = new THREE.BoxGeometry(6, 2, 3);
+        // Sets orangeWingMaterial to kart's rear
         let rearMaterial = orangeWingMaterial;
-        // let rearMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)' });
         this.rear = new THREE.Mesh(rearGeometry, rearMaterial);
         this.rear.position.set(-8, 0.0, 1.0);
 
         //create a wing
         let rearWingGeometry = new THREE.BoxGeometry(2, 8, 1.5);
+        // Sets orangeWingMaterial to kart's rear wing
         let rearWingMaterial = orangeWingMaterial;
-        // let rearWingMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,150,0)' });
         this.rearWing = new THREE.Mesh(rearWingGeometry, rearWingMaterial);
         this.rearWing.position.set(-2.0, 0.0, 1.5);
 
         //create a wing
         let spoilerSupportGeometry = new THREE.BoxGeometry(2, 0.3, 1.5);
+        // Sets orangeWingMaterial to kart's spoilerSupports
         let spoilerSupportMaterial = orangeWingMaterial;
-        // let spoilerSupportMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
         this.spoilerSupportRight = new THREE.Mesh(spoilerSupportGeometry, spoilerSupportMaterial);
         this.spoilerSupportLeft = new THREE.Mesh(spoilerSupportGeometry, spoilerSupportMaterial);
         // position the cube
         this.spoilerSupportRight.position.set(0, -1.5, 1.5);
         this.spoilerSupportLeft.position.set(0, 1.5, 1.5);
-
         let spoilerGeometry = new THREE.BoxGeometry(3, 10, 0.5);
         let spoilerMaterial = orangeWingMaterial;
-        // let spoilerMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(150,0,0)' });
         this.spoiler = new THREE.Mesh(spoilerGeometry, spoilerMaterial);
         this.spoiler.position.set(0, 0, 2.5);
 
@@ -145,22 +143,22 @@ class kartModel {
         this.rearWheelLeft.position.set(0.0, 5.5, 0.0);
         this.rearWheelRight.position.set(0.0, -5.5, 0.0);
 
-        // ? seat
-        // create base floor
+        // create seat
         let seatGeometry = new THREE.BoxGeometry(5, 5, 0.5);
+        // Sets blueWingMaterial to kart's seat
         let seatMaterial = blueWingMaterial;
-        // let seatMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(255,255,255)' });
         this.seat = new THREE.Mesh(seatGeometry, seatMaterial);
         this.seat.position.set(0.0, 0.0, 0.75);
 
         // create seat back
         let seatBackGeometry = new THREE.BoxGeometry(0.5, 5, 4);
+        // Sets blueWingMaterial to kart's seat back
         let seatBackMaterial = blueWingMaterial;
-        // let seatBackMaterial = new THREE.MeshPhongMaterial({ color: 'rgb(125,125,125)' });
         this.seatBack = new THREE.Mesh(seatBackGeometry, seatBackMaterial);
         this.seatBack.position.set(-2.5, 0, 1.75);
 
         // create adhesives
+        // Right and left for the kart's number
         // Right
         this.adhesiveRight = new THREE.Mesh(numberGeometry,numberMaterial);
         this.adhesiveRight.position.set(0,-.51,0);
@@ -169,12 +167,14 @@ class kartModel {
         this.adhesiveLeft = new THREE.Mesh(numberGeometry,numberMaterial);
         this.adhesiveLeft.position.set(0,.51,0);
         this.adhesiveLeft.rotateX(degreesToRadians(270));
+        // Flash image to kart's back
         // Back
         this.adhesiveBack = new THREE.Mesh(flashGeometry,flashMaterial);
         this.adhesiveBack.position.set(-3.1,0,-.48);
         this.adhesiveBack.rotateY(degreesToRadians(270));
         this.adhesiveBack.rotateZ(degreesToRadians(270));
 
+        // Casts shadows
         this.floor.castShadow = true;
         this.back.castShadow = true;
         this.fore.castShadow = true;
@@ -316,30 +316,37 @@ class kartModel {
      */
     spinWheels(kartSpinCounter){
 
+        // Calcs spin angle
         let spinAngle = kartSpinCounter*(1+Math.abs(this.frontWheelsAngle));
 
+        // Matrix auto update set to false
         this.frontWheelLeft.matrixAutoUpdate = false;
         this.frontWheelRight.matrixAutoUpdate = false;
         this.rearWheelLeft.matrixAutoUpdate = false;
         this.rearWheelRight.matrixAutoUpdate = false;
 
+        // New matrix
         var mat4 = new THREE.Matrix4();
 
+        // Sets to identity
         this.frontWheelLeft.matrix.identity();
         this.frontWheelRight.matrix.identity();
         this.rearWheelLeft.matrix.identity();
         this.rearWheelRight.matrix.identity();
 
+        // Operations to frontWheelLeft
         this.frontWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
-        this.frontWheelLeft.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
-        this.frontWheelRight.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle)));
-        this.frontWheelLeft.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle)));  
+        this.frontWheelLeft.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle))); // z-spin
+        this.frontWheelLeft.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle))); // y-spin
+        // Operations to frontWheelRight
         this.frontWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
-        this.frontWheelRight.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle)));
+        this.frontWheelRight.matrix.multiply(mat4.makeRotationZ(degreesToRadians(this.frontWheelsAngle))); // z-spin
+        this.frontWheelRight.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle))); // y-spin
+        // Operations to rear Wheels
         this.rearWheelLeft.matrix.multiply(mat4.makeTranslation(0.0, -5.5, 0.0));
-        this.rearWheelLeft.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle))); 
+        this.rearWheelLeft.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle))); // y-spin
         this.rearWheelRight.matrix.multiply(mat4.makeTranslation(0.0, 5.5, 0.0)); 
-        this.rearWheelRight.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle)));
+        this.rearWheelRight.matrix.multiply(mat4.makeRotationY(degreesToRadians(spinAngle))); // y-spin
 
     }
 

@@ -221,17 +221,20 @@ function main(){
 
    // Plane
   const planePos = new THREE.Vector3(-325,275,-5);
+  // Loads the plane
   loadOBJFile(scene, 'assets/objects/','Plane',true,80, planePos);
   let planeObj;
 
   // Columns
   const goldColumn1Pos = new THREE.Vector3(77,-380,10)
   const goldColumn2Pos = new THREE.Vector3(77,-277,10)
-  let columnTexture = textureLoader.load('../works/assets/textures/golden_column_0.jpg');
+  let columnTexture = textureLoader.load('../works/assets/textures/golden_column_0.jpg'); // Columns texture
+  // Loads the columns
   loadOBJFile(scene, 'assets/objects/','golden_column',true,50, goldColumn1Pos, columnTexture, 'coluna1');
   loadOBJFile(scene, 'assets/objects/','golden_column',true,50, goldColumn2Pos, columnTexture, 'coluna2');
   let col1;
   let col2;
+  // Time interval to load the objects in the scene
   setTimeout(() => { 
     col1 = scene.getObjectByName("coluna1", true);
     col1.translateZ(14).rotateX(degreesToRadians(90));
@@ -244,12 +247,15 @@ function main(){
 
   // create the finish line plane
   const finishlinePos = new THREE.Vector3(80,-329,0.1)
+  // Loads the finishLine's texture
   let finishline = textureLoader.load('../works/assets/textures/finishline.png');
+  // Creates the finishLine's plane and maps the texture 
   var finishGeometry = new THREE.PlaneGeometry(99, 10, 10, 10);
   var finishMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:finishline});
   var finishlinePlane = new THREE.Mesh(finishGeometry, finishMaterial);
   finishlinePlane.receiveShadow = true;
   scene.add(finishlinePlane);
+  // finishLine's position
   finishlinePlane.rotateZ(degreesToRadians(90));
   finishlinePlane.position.copy(finishlinePos);
 
