@@ -15,12 +15,14 @@ function lightFollowCamera(scene, camera, light, target){
 
 }
 
-function behindKartCamera(camera, kart, kartX, kartY) {
+function behindKartCamera(camera, offset, kart, kartX, kartY) {
   
   var upVec = new THREE.Vector3(0, 0, 1);
   let lookAt = new THREE.Vector3(kartX, kartY, 1.5);
   
-  var relativeCameraOffset = new THREE.Vector3(-40, 0, 12.5);
+  let relativeCameraOffset = new THREE.Vector3();
+  relativeCameraOffset.copy(offset);
+
   var cameraOffset = relativeCameraOffset.applyMatrix4(kart.matrixWorld);
   camera.position.x = cameraOffset.x;
   camera.position.y = cameraOffset.y;
@@ -155,6 +157,7 @@ function main(){
   var trackPlane = new THREE.Mesh(trackPlaneGeometry, trackPlaneMaterial);
   trackPlane.receiveShadow = true;
   scene.add(trackPlane);
+
   // create sand plane 
   let sand = textureLoader.load('../works/assets/textures/sand.jpg');
   sand.wrapS = THREE.RepeatWrapping;
@@ -239,7 +242,8 @@ function main(){
     col2.translateZ(14).rotateX(degreesToRadians(90));
     planeObj = scene.getObjectByName("Plane",true);
     planeObj.translateZ(20).translateY(-400).rotateX(degreesToRadians(90));
-    console.log(col1);
+
+    document.getElementById("loading-screen").style.display = "none";
   }, 10000);
 
   // create the finish line plane
@@ -259,6 +263,24 @@ function main(){
   let mountTwo = createMountTwo(new THREE.Vector3(435,120, 0), 10);
   scene.add(mountTwo);
   
+  let cameraOffset = new THREE.Vector3(-40, 0, 12.5);
+
+  document.getElementsByTagName("canvas")[0].addEventListener( 'wheel', function (event){
+
+		if ( event.deltaY < 0 ) {
+      if (cameraOffset.x < -18 && cameraOffset.z > 7){
+        cameraOffset.x -= event.deltaY/26.5;
+        cameraOffset.z += event.deltaY/106
+      }
+
+		} else if ( event.deltaY > 0 ) {
+      if (cameraOffset.x > -88 && cameraOffset.z < 24.5){
+        cameraOffset.x -= event.deltaY/26.5;
+        cameraOffset.z += event.deltaY/106;
+      }
+		}
+  }, false );
+
   buildInterface();
   render();
 
@@ -432,16 +454,13 @@ function main(){
 
     frontWing.getWorldPosition( cockpitTarget );
     targetObject.position.copy(cockpitTarget);
-    if(activeCamera == 0){behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);}
-    if(activeCamera == 1){cockpitCamera(camera, targetObject, cockpitTarget.x, cockpitTarget.y)}
-    if(activeCamera == 3){heavenCamera(camera)}
   }
 
   
   function updateCamera(){
     switch (activeCamera) {
       case 0:
-        behindKartCamera(camera, kartFloor, kartFloor.position.x, kartFloor.position.y);
+        behindKartCamera(camera, cameraOffset, kartFloor, kartFloor.position.x, kartFloor.position.y);
         break;
       case 1:
         cockpitCamera(camera, targetObject, cockpitTarget.x, cockpitTarget.y);
@@ -497,8 +516,7 @@ function main(){
     }
     
     if(activeCamera == 0){
-
-      behindKartCamera(camera, kartFloor, cockpitTarget.x, cockpitTarget.y)
+      behindKartCamera(camera, cameraOffset, kartFloor, cockpitTarget.x, cockpitTarget.y)
       lightFollowCamera(scene, camera, cameraLight, kartFloor);
     }
     if(activeCamera == 1){
