@@ -485,6 +485,7 @@ function main(){
     for (i = 0; i < polesPosition.length; i++){
       scene.remove(poles[i]);
     }
+    scene.remove(planeObj);
   }
 
   function addScenario(){
@@ -499,6 +500,9 @@ function main(){
     scene.add(finishlinePlane);
     for (i = 0; i < poles.length; i++){
       scene.add(poles[i]);
+    }
+    if( planeObj != undefined){
+      scene.add(planeObj);
     }
   }
 
