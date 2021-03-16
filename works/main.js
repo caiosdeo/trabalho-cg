@@ -233,6 +233,7 @@ function main(){
   for(let i = 0; i < nFlags; i++)
     loadOBJFile(scene, 'assets/objects/','flag',true,25, flagPos,flagTexture,`flag${i}`);
 let flag;
+let flags = [];
 
   // Columns
   const goldColumn1Pos = new THREE.Vector3(77,-380,10)
@@ -257,6 +258,7 @@ let flag;
       flag = scene.getObjectByName(`flag${i}`,true);
       flag.rotateX(degreesToRadians(90)).rotateY(degreesToRadians(90));
       flag.translateZ(-i*30);
+      flags.push(flag) // pushes flag to list
     }
   }, 10000);
 
