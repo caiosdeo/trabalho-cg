@@ -225,6 +225,15 @@ function main(){
   loadOBJFile(scene, 'assets/objects/','Plane',true,80, planePos);
   let planeObj;
 
+  // Loads the flags
+  nFlags = 10;
+  flagPos = new THREE.Vector3(10,-275, 0);
+  flagTexture = textureLoader.load('../works/assets/textures/racing_flag.jpg'); // flags texture
+  // Loop to load flags
+  for(let i = 0; i < nFlags; i++)
+    loadOBJFile(scene, 'assets/objects/','flag',true,25, flagPos,flagTexture,`flag${i}`);
+let flag;
+
   // Columns
   const goldColumn1Pos = new THREE.Vector3(77,-380,10)
   const goldColumn2Pos = new THREE.Vector3(77,-277,10)
@@ -241,8 +250,14 @@ function main(){
     col2 = scene.getObjectByName("coluna2", true);
     col2.translateZ(14).rotateX(degreesToRadians(90));
     planeObj = scene.getObjectByName("Plane",true);
-    planeObj.translateZ(20).translateY(-400).rotateX(degreesToRadians(90));
-    console.log(col1);
+    planeObj.translateZ(20).translateY(-400).rotateX(degreesToRadians(95));
+    // Gets flag objects
+    // Rotates and translates
+    for(let i = 0; i < nFlags; i++){
+      flag = scene.getObjectByName(`flag${i}`,true);
+      flag.rotateX(degreesToRadians(90)).rotateY(degreesToRadians(90));
+      flag.translateZ(-i*30);
+    }
   }, 10000);
 
   // create the finish line plane
