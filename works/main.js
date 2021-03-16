@@ -224,36 +224,59 @@ function main(){
 
    // Plane
   const planePos = new THREE.Vector3(-325,275,-5);
+  // Loads the plane
   loadOBJFile(scene, 'assets/objects/','Plane',true,80, planePos);
   let planeObj;
+
+  // Loads the flags
+  nFlags = 10;
+  flagPos = new THREE.Vector3(10,-275, 0);
+  flagTexture = textureLoader.load('../works/assets/textures/racing_flag.jpg'); // flags texture
+  // Loop to load flags
+  for(let i = 0; i < nFlags; i++)
+    loadOBJFile(scene, 'assets/objects/','flag',true,25, flagPos,flagTexture,`flag${i}`);
+let flag;
 
   // Columns
   const goldColumn1Pos = new THREE.Vector3(77,-380,10)
   const goldColumn2Pos = new THREE.Vector3(77,-277,10)
-  let columnTexture = textureLoader.load('../works/assets/textures/golden_column_0.jpg');
+  let columnTexture = textureLoader.load('../works/assets/textures/golden_column_0.jpg'); // Columns texture
+  // Loads the columns
   loadOBJFile(scene, 'assets/objects/','golden_column',true,50, goldColumn1Pos, columnTexture, 'coluna1');
   loadOBJFile(scene, 'assets/objects/','golden_column',true,50, goldColumn2Pos, columnTexture, 'coluna2');
   let col1;
   let col2;
+  // Time interval to load the objects in the scene
   setTimeout(() => { 
     col1 = scene.getObjectByName("coluna1", true);
     col1.translateZ(14).rotateX(degreesToRadians(90));
     col2 = scene.getObjectByName("coluna2", true);
     col2.translateZ(14).rotateX(degreesToRadians(90));
     planeObj = scene.getObjectByName("Plane",true);
-    planeObj.translateZ(20).translateY(-400).rotateX(degreesToRadians(90));
-
+    planeObj.translateZ(20).translateY(-400).rotateX(degreesToRadians(95));
+    // Gets flag objects
+    // Rotates and translates
+    for(let i = 0; i < nFlags; i++){
+      flag = scene.getObjectByName(`flag${i}`,true);
+      flag.rotateX(degreesToRadians(90)).rotateY(degreesToRadians(90));
+      flag.translateZ(-i*30);
+    }
+    
     document.getElementById("loading-screen").style.display = "none";
+
   }, 10000);
 
   // create the finish line plane
   const finishlinePos = new THREE.Vector3(80,-329,0.1)
+  // Loads the finishLine's texture
   let finishline = textureLoader.load('../works/assets/textures/finishline.png');
+  // Creates the finishLine's plane and maps the texture 
   var finishGeometry = new THREE.PlaneGeometry(99, 10, 10, 10);
   var finishMaterial = new THREE.MeshPhongMaterial({side:THREE.DoubleSide, map:finishline});
   var finishlinePlane = new THREE.Mesh(finishGeometry, finishMaterial);
   finishlinePlane.receiveShadow = true;
   scene.add(finishlinePlane);
+  // finishLine's position
   finishlinePlane.rotateZ(degreesToRadians(90));
   finishlinePlane.position.copy(finishlinePos);
 
@@ -369,7 +392,10 @@ function main(){
       if(kartSpeed + kartReverseSpeed != 0)
         kart.spinWheels(kartSpinCounter);
 
-      if (keyboard.pressed("right")){ // * Rodas do kart pra direita
+      // The functions below are the same as the functions above
+      // The parameters were just adapted for the kartReverSpeed and the reverse movements
+
+      if (keyboard.pressed("right")){ // * Wheels to right
         kart.decrementFrontWheelsAngle(3);
         if(kartSpeed > 0){
           kartFloor.rotateOnAxis(new THREE.Vector3(0,0,1), -rotateAngle);
@@ -378,7 +404,7 @@ function main(){
       }else{
         kart.correctFrontWheelsLeft();
       }
-      if (keyboard.pressed("left")){ // * Rodas do kart pra esquerda
+      if (keyboard.pressed("left")){ // * Wheels to left
         kart.incrementFrontWheelsAngle(3);
         if(kartSpeed > 0){
           kartFloor.rotateOnAxis(new THREE.Vector3(0,0,1), rotateAngle);
