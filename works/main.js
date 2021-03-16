@@ -514,6 +514,9 @@ let flags = [];
       scene.remove(poles[i]);
     }
     scene.remove(planeObj);
+    for (i = 0; i < flags.length; i++){
+      scene.remove(flags[i]);
+    }
   }
 
   function addScenario(){
@@ -531,6 +534,9 @@ let flags = [];
     }
     if( planeObj != undefined){
       scene.add(planeObj);
+    }
+    for (i = 0; i < flags.length; i++){
+      scene.add(flags[i]);
     }
   }
 
